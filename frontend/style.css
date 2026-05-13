@@ -470,25 +470,23 @@ a.source-pill:hover {
 
 /* New Chat Button */
 .new-chat-btn {
-    width: 100%;
-    background: var(--background);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    background: none;
+    border: none;
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     cursor: pointer;
-    padding: 0.75rem;
+    padding: 0.5rem 0;
     text-align: left;
-    transition: border-color 0.2s ease, color 0.2s ease;
+    transition: color 0.2s ease;
     margin-bottom: 0.75rem;
+    outline: none;
 }
 
 .new-chat-btn:hover {
     color: var(--primary-color);
-    border-color: var(--primary-color);
 }
 
 /* Sidebar Headers */
