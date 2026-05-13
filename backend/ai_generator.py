@@ -83,9 +83,12 @@ Provide only the direct answer to what was asked.
         # Handle tool execution if needed
         if response.stop_reason == "tool_use" and tool_manager:
             return self._handle_tool_execution(response, api_params, tool_manager)
-        
-        # Return direct response
-        return response.content[0].text
+
+        # Return direct response — guard against unexpected non-text blocks
+        text_blocks = [c for c in response.content if c.type == "text"]
+        if not text_blocks:
+            return "I was unable to process this request. Please try again."
+        return text_blocks[0].text
     
     def _handle_tool_execution(self, initial_response, base_params: Dict[str, Any], tool_manager):
         """
@@ -129,5 +132,5 @@ Provide only the direct answer to what was asked.
 
         text_blocks = [c for c in response.content if c.type == "text"]
         if not text_blocks:
-            raise ValueError("Claude returned no text after tool execution")
+            return "I was unable to generate a response after searching the course materials. Please try rephrasing your question."
         return text_blocks[0].text
