@@ -88,48 +88,45 @@ Provide only the direct answer to what was asked.
     
     def _handle_tool_execution(self, initial_response, base_params: Dict[str, Any], tool_manager):
         """
-        Handle execution of tool calls and get follow-up response.
-        
-        Args:
-            initial_response: The response containing tool use requests
-            base_params: Base API parameters
-            tool_manager: Manager to execute tools
-            
-        Returns:
-            Final response text after tool execution
+        Agentic loop: execute tool calls and re-invoke Claude until it produces a text response.
+        Claude may call tools multiple times (e.g. searching several lessons for a course outline).
         """
-        # Start with existing messages
         messages = base_params["messages"].copy()
-        
-        # Add AI's tool use response
-        messages.append({"role": "assistant", "content": initial_response.content})
-        
-        # Execute all tool calls and collect results
-        tool_results = []
-        for content_block in initial_response.content:
-            if content_block.type == "tool_use":
-                tool_result = tool_manager.execute_tool(
-                    content_block.name, 
-                    **content_block.input
-                )
-                
-                tool_results.append({
-                    "type": "tool_result",
-                    "tool_use_id": content_block.id,
-                    "content": tool_result
-                })
-        
-        # Add tool results as single message
-        if tool_results:
+        response = initial_response
+        max_rounds = 10
+
+        for _ in range(max_rounds):
+            messages.append({"role": "assistant", "content": response.content})
+
+            tool_results = []
+            for content_block in response.content:
+                if content_block.type == "tool_use":
+                    tool_result = tool_manager.execute_tool(
+                        content_block.name,
+                        **content_block.input
+                    )
+                    tool_results.append({
+                        "type": "tool_result",
+                        "tool_use_id": content_block.id,
+                        "content": tool_result
+                    })
+
+            if not tool_results:
+                break
+
             messages.append({"role": "user", "content": tool_results})
-        
-        # Prepare final API call without tools
-        final_params = {
-            **self.base_params,
-            "messages": messages,
-            "system": base_params["system"]
-        }
-        
-        # Get final response
-        final_response = self.client.messages.create(**final_params)
-        return final_response.content[0].text
+
+            response = self.client.messages.create(**{
+                **self.base_params,
+                "messages": messages,
+                "system": base_params["system"],
+                "tools": base_params.get("tools", []),
+            })
+
+            if response.stop_reason != "tool_use":
+                break
+
+        text_blocks = [c for c in response.content if c.type == "text"]
+        if not text_blocks:
+            raise ValueError("Claude returned no text after tool execution")
+        return text_blocks[0].text
