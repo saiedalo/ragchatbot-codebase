@@ -1,0 +1,20 @@
+{
+    "name": "ragchatbot-frontend",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "description": "Frontend for the RAG chatbot course assistant",
+    "scripts": {
+        "format": "prettier --write \"**/*.{js,css,html}\"",
+        "format:check": "prettier --check \"**/*.{js,css,html}\"",
+        "lint": "eslint script.js",
+        "lint:fix": "eslint --fix script.js",
+        "quality": "npm run lint && npm run format:check",
+        "quality:fix": "npm run lint:fix && npm run format"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.0.0",
+        "eslint": "^9.0.0",
+        "prettier": "^3.5.3"
+    }
+}

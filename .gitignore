@@ -23,6 +23,10 @@ uploads/
 # Playwright MCP artifacts
 .playwright-mcp/
 
+# Node / frontend tooling
+node_modules/
+frontend/node_modules/
+
 # IDE
 .vscode/
 .idea/
