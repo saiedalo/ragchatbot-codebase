@@ -5,7 +5,7 @@ const API_URL = '/api';
 let currentSessionId = null;
 
 // DOM elements
-let chatMessages, chatInput, sendButton, totalCourses, courseTitles, newChatButton, themeToggle;
+let chatMessages, chatInput, sendButton, totalDokumente, dokumentTitel, newChatButton, themeToggle;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,15 +13,15 @@ document.addEventListener('DOMContentLoaded', () => {
     chatMessages = document.getElementById('chatMessages');
     chatInput = document.getElementById('chatInput');
     sendButton = document.getElementById('sendButton');
-    totalCourses = document.getElementById('totalCourses');
-    courseTitles = document.getElementById('courseTitles');
+    totalDokumente = document.getElementById('totalDokumente');
+    dokumentTitel = document.getElementById('dokumentTitel');
     newChatButton = document.getElementById('newChatButton');
     themeToggle = document.getElementById('themeToggle');
-    
+
     setupEventListeners();
     initializeTheme();
     createNewSession();
-    loadCourseStats();
+    loadDokumentStats();
 });
 
 // Event Listeners
@@ -31,13 +31,13 @@ function setupEventListeners() {
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
     });
-    
+
     // New chat button
     newChatButton.addEventListener('click', startNewChat);
-    
+
     // Theme toggle
     themeToggle.addEventListener('click', toggleTheme);
-    
+
     // Keyboard shortcut for theme toggle (Ctrl/Cmd + Shift + T)
     document.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'T') {
@@ -45,7 +45,7 @@ function setupEventListeners() {
             toggleTheme();
         }
     });
-    
+
     // Suggested questions
     document.querySelectorAll('.suggested-item').forEach(button => {
         button.addEventListener('click', (e) => {
@@ -87,10 +87,10 @@ async function sendMessage() {
             })
         });
 
-        if (!response.ok) throw new Error('Query failed');
+        if (!response.ok) throw new Error('Anfrage fehlgeschlagen');
 
         const data = await response.json();
-        
+
         // Update session ID if new
         if (!currentSessionId) {
             currentSessionId = data.session_id;
@@ -103,7 +103,7 @@ async function sendMessage() {
     } catch (error) {
         // Replace loading message with error
         loadingMessage.remove();
-        addMessage(`Error: ${error.message}`, 'assistant');
+        addMessage(`Fehler: ${error.message}`, 'assistant');
     } finally {
         chatInput.disabled = false;
         sendButton.disabled = false;
@@ -131,12 +131,12 @@ function addMessage(content, type, sources = null, sourceLinks = null, isWelcome
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${type}${isWelcome ? ' welcome-message' : ''}`;
     messageDiv.id = `message-${messageId}`;
-    
+
     // Convert markdown to HTML for assistant messages
     const displayContent = type === 'assistant' ? marked.parse(content) : escapeHtml(content);
-    
+
     let html = `<div class="message-content">${displayContent}</div>`;
-    
+
     if (sources && sources.length > 0) {
         // Create sources with clickable links when available
         const sourcesHtml = sources.map((source, index) => {
@@ -147,19 +147,19 @@ function addMessage(content, type, sources = null, sourceLinks = null, isWelcome
                 return source;
             }
         }).join(', ');
-        
+
         html += `
             <details class="sources-collapsible">
-                <summary class="sources-header">Sources</summary>
+                <summary class="sources-header">Quellen</summary>
                 <div class="sources-content">${sourcesHtml}</div>
             </details>
         `;
     }
-    
+
     messageDiv.innerHTML = html;
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    
+
     return messageId;
 }
 
@@ -169,8 +169,6 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
-
-// Removed removeMessage function - no longer needed since we handle loading differently
 
 async function startNewChat() {
     // Clear the current session on backend if exists
@@ -186,11 +184,11 @@ async function startNewChat() {
                 })
             });
         } catch (error) {
-            console.error('Error clearing session:', error);
+            console.error('Fehler beim Löschen der Sitzung:', error);
             // Continue with frontend cleanup even if backend fails
         }
     }
-    
+
     // Clear frontend state and UI
     await createNewSession();
 }
@@ -201,43 +199,122 @@ async function createNewSession() {
     chatInput.value = '';
     chatInput.disabled = false;
     sendButton.disabled = false;
-    addMessage('Welcome to the Course Materials Assistant! I can help you with questions about courses, lessons and specific content. What would you like to know?', 'assistant', null, null, true);
+    addMessage('Willkommen beim Regulierungs-Assistenten! Ich beantworte Ihre Fragen zu deutschen Finanzregulierungen, BaFin-Vorschriften, MaRisk-Anforderungen und Compliance. Womit kann ich Ihnen helfen?', 'assistant', null, null, true);
 }
 
-// Load course statistics
-async function loadCourseStats() {
-    try {
-        console.log('Loading course stats...');
-        const response = await fetch(`${API_URL}/courses`);
-        if (!response.ok) throw new Error('Failed to load course stats');
-        
-        const data = await response.json();
-        console.log('Course data received:', data);
-        
-        // Update stats in UI
-        if (totalCourses) {
-            totalCourses.textContent = data.total_courses;
+// Load document statistics
+function getDokumentKuerzel(titel) {
+    if (/marisk/i.test(titel)) return 'MaRisk';
+    if (/bait|rundschreiben 10\/2017/i.test(titel)) return 'BAIT';
+    if (/gwg|geldwäsch/i.test(titel)) return 'GwG';
+    if (/bundesbank|merkblatt/i.test(titel)) return 'Merkblatt';
+    return titel.substring(0, 6).trim();
+}
+
+function getDokumentKurzbeschreibung(titel) {
+    if (/marisk/i.test(titel)) return 'Mindestanforderungen Risikomanagement';
+    if (/bait|rundschreiben 10\/2017/i.test(titel)) return 'Bankaufsichtl. Anforderungen IT';
+    if (/gwg|geldwäsch/i.test(titel)) return 'Auslegungs- und Anwendungshinweise';
+    if (/bundesbank/i.test(titel)) return 'Merkblatt Finanzdienstleistungen';
+    return titel.length > 50 ? titel.substring(0, 50) + '…' : titel;
+}
+
+function normalizeHerausgeber(herausgeber, titel) {
+    // Normalize noisy PDF-extracted publisher strings to clean group names
+    if (!herausgeber || /^\.\.\//.test(herausgeber)) {
+        // Fallback: infer from title
+        if (/bundesbank/i.test(titel)) return 'Deutsche Bundesbank';
+        return 'BaFin';
+    }
+    if (/bundesbank/i.test(herausgeber)) return 'Deutsche Bundesbank';
+    if (/bafin|bundesanstalt|finanzdienstleistungsaufsicht/i.test(herausgeber)) return 'BaFin';
+    return herausgeber;
+}
+
+function renderDokumentListe(dokumente) {
+    // Normalize and group by issuer
+    const gruppen = {};
+    const gruppenOrder = [];
+    for (const dok of dokumente) {
+        const gruppe = normalizeHerausgeber(dok.herausgeber, dok.titel);
+        if (!gruppen[gruppe]) {
+            gruppen[gruppe] = [];
+            gruppenOrder.push(gruppe);
         }
-        
-        // Update course titles
-        if (courseTitles) {
-            if (data.course_titles && data.course_titles.length > 0) {
-                courseTitles.innerHTML = data.course_titles
-                    .map(title => `<div class="course-title-item">${title}</div>`)
-                    .join('');
+        gruppen[gruppe].push(dok);
+    }
+
+    // BaFin first, then others
+    gruppenOrder.sort((a, b) => {
+        if (a === 'BaFin') return -1;
+        if (b === 'BaFin') return 1;
+        return a.localeCompare(b, 'de');
+    });
+
+    let html = '';
+    for (const gruppenName of gruppenOrder) {
+        const docs = gruppen[gruppenName];
+        html += `<div class="dok-gruppe">
+            <div class="dok-gruppe-header">${escapeHtml(gruppenName)}</div>`;
+        for (const dok of docs) {
+            const kuerzel = getDokumentKuerzel(dok.titel);
+            const kurzbeschreibung = getDokumentKurzbeschreibung(dok.titel);
+            // Only use http/https URLs — not local file paths
+            const isExternalLink = dok.dokument_quelle && /^https?:\/\//.test(dok.dokument_quelle);
+            const link = isExternalLink
+                ? `href="${escapeHtml(dok.dokument_quelle)}" target="_blank" rel="noopener"`
+                : '';
+            const tag = link ? 'a' : 'div';
+            html += `<${tag} class="dok-karte${link ? ' dok-karte--link' : ''}" ${link}>
+                <span class="dok-badge">${escapeHtml(kuerzel)}</span>
+                <span class="dok-beschreibung">${escapeHtml(kurzbeschreibung)}</span>
+            </${tag}>`;
+        }
+        html += '</div>';
+    }
+    return html;
+}
+
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+async function loadDokumentStats() {
+    try {
+        console.log('Lade Dokumentstatistiken...');
+        const response = await fetch(`${API_URL}/dokumente`);
+        if (!response.ok) throw new Error('Dokumentstatistiken konnten nicht geladen werden');
+
+        const data = await response.json();
+        console.log('Dokumentdaten empfangen:', data);
+
+        // Update stats in UI
+        if (totalDokumente) {
+            totalDokumente.textContent = data.gesamt_dokumente;
+        }
+
+        // Update document list
+        if (dokumentTitel) {
+            const dokumente = data.dokumente || [];
+            if (dokumente.length > 0) {
+                dokumentTitel.innerHTML = renderDokumentListe(dokumente);
             } else {
-                courseTitles.innerHTML = '<span class="no-courses">No courses available</span>';
+                dokumentTitel.innerHTML = '<span class="no-courses">Keine Dokumente verfügbar</span>';
             }
         }
-        
+
     } catch (error) {
-        console.error('Error loading course stats:', error);
+        console.error('Fehler beim Laden der Dokumentstatistiken:', error);
         // Set default values on error
-        if (totalCourses) {
-            totalCourses.textContent = '0';
+        if (totalDokumente) {
+            totalDokumente.textContent = '0';
         }
-        if (courseTitles) {
-            courseTitles.innerHTML = '<span class="error">Failed to load courses</span>';
+        if (dokumentTitel) {
+            dokumentTitel.innerHTML = '<span class="error">Dokumente konnten nicht geladen werden</span>';
         }
     }
 }
@@ -258,12 +335,12 @@ function toggleTheme() {
 function setTheme(theme) {
     if (theme === 'light') {
         document.documentElement.setAttribute('data-theme', 'light');
-        themeToggle.setAttribute('aria-label', 'Switch to dark theme');
+        themeToggle.setAttribute('aria-label', 'Zu dunklem Farbschema wechseln');
     } else {
         document.documentElement.removeAttribute('data-theme');
-        themeToggle.setAttribute('aria-label', 'Switch to light theme');
+        themeToggle.setAttribute('aria-label', 'Zu hellem Farbschema wechseln');
     }
-    
+
     // Save theme preference
     localStorage.setItem('theme', theme);
 }

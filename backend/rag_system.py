@@ -2,21 +2,23 @@ import os
 from typing import Dict, List, Optional, Tuple
 
 from ai_generator import AIGenerator
-from document_processor import DocumentProcessor
-from models import Course, CourseChunk, Lesson
-from search_tools import CourseOutlineTool, CourseSearchTool, ToolManager
+from document_processor import DocumentProcessor, PDFDocumentProcessor
+from models import Abschnitt, Dokument, DokumentChunk
+from search_tools import DokumentStrukturTool, ReguliierungssuchTool, ToolManager
 from session_manager import SessionManager
 from vector_store import VectorStore
 
 
 class RAGSystem:
-    """Main orchestrator for the Retrieval-Augmented Generation system"""
+    """Haupt-Orchestrator für das Retrieval-Augmented Generation System"""
 
-    def __init__(self, config):
+    def __init__(self, config) -> None:
         self.config = config
 
-        # Initialize core components
         self.document_processor = DocumentProcessor(
+            config.CHUNK_SIZE, config.CHUNK_OVERLAP
+        )
+        self.pdf_processor = PDFDocumentProcessor(
             config.CHUNK_SIZE, config.CHUNK_OVERLAP
         )
         self.vector_store = VectorStore(
@@ -27,120 +29,116 @@ class RAGSystem:
         )
         self.session_manager = SessionManager(config.MAX_HISTORY)
 
-        # Initialize search tools
         self.tool_manager = ToolManager()
-        self.search_tool = CourseSearchTool(self.vector_store)
-        self.outline_tool = CourseOutlineTool(self.vector_store)
+        self.search_tool = ReguliierungssuchTool(self.vector_store)
+        self.outline_tool = DokumentStrukturTool(self.vector_store)
         self.tool_manager.register_tool(self.search_tool)
         self.tool_manager.register_tool(self.outline_tool)
 
-    def add_course_document(self, file_path: str) -> Tuple[Course, int]:
+    def add_dokument(self, file_path: str) -> Tuple[Optional[Dokument], int]:
         """
-        Add a single course document to the knowledge base.
+        Fügt ein einzelnes Regulierungsdokument zur Wissensbasis hinzu.
 
         Args:
-            file_path: Path to the course document
+            file_path: Pfad zum Dokument
 
         Returns:
-            Tuple of (Course object, number of chunks created)
+            Tuple aus (Dokument-Objekt, Anzahl erstellter Chunks)
         """
         try:
-            # Process the document
-            course, course_chunks = self.document_processor.process_course_document(
-                file_path
-            )
+            if file_path.lower().endswith(".pdf"):
+                dokument, dok_chunks = self.pdf_processor.process_pdf_document(
+                    file_path
+                )
+            else:
+                dokument, dok_chunks = self.document_processor.process_document(
+                    file_path
+                )
 
-            # Add course metadata to vector store for semantic search
-            self.vector_store.add_course_metadata(course)
+            self.vector_store.add_dokument_metadata(dokument)
+            self.vector_store.add_dokument_inhalt(dok_chunks)
 
-            # Add course content chunks to vector store
-            self.vector_store.add_course_content(course_chunks)
-
-            return course, len(course_chunks)
+            return dokument, len(dok_chunks)
         except Exception as e:
-            print(f"Error processing course document {file_path}: {e}")
+            print(f"Fehler beim Verarbeiten von {file_path}: {e}")
             return None, 0
 
-    def add_course_folder(
+    def add_dokument_ordner(
         self, folder_path: str, clear_existing: bool = False
     ) -> Tuple[int, int]:
         """
-        Add all course documents from a folder.
+        Fügt alle Regulierungsdokumente aus einem Ordner hinzu.
 
         Args:
-            folder_path: Path to folder containing course documents
-            clear_existing: Whether to clear existing data first
+            folder_path: Pfad zum Ordner mit Dokumenten
+            clear_existing: Ob vorhandene Daten vorher gelöscht werden sollen
 
         Returns:
-            Tuple of (total courses added, total chunks created)
+            Tuple aus (Gesamtanzahl Dokumente, Gesamtanzahl Chunks)
         """
-        total_courses = 0
-        total_chunks = 0
+        gesamt_dokumente = 0
+        gesamt_chunks = 0
 
-        # Clear existing data if requested
         if clear_existing:
-            print("Clearing existing data for fresh rebuild...")
+            print("Lösche vorhandene Daten für Neuaufbau...")
             self.vector_store.clear_all_data()
 
         if not os.path.exists(folder_path):
-            print(f"Folder {folder_path} does not exist")
+            print(f"Ordner {folder_path} existiert nicht")
             return 0, 0
 
-        # Get existing course titles to avoid re-processing
-        existing_course_titles = set(self.vector_store.get_existing_course_titles())
+        vorhandene_titel = set(self.vector_store.get_existing_dokument_titel())
 
-        # Process each file in the folder
         for file_name in os.listdir(folder_path):
             file_path = os.path.join(folder_path, file_name)
             if os.path.isfile(file_path) and file_name.lower().endswith(
                 (".pdf", ".docx", ".txt")
             ):
                 try:
-                    # Check if this course might already exist
-                    # We'll process the document to get the course ID, but only add if new
-                    course, course_chunks = (
-                        self.document_processor.process_course_document(file_path)
-                    )
-
-                    if course and course.title not in existing_course_titles:
-                        # This is a new course - add it to the vector store
-                        self.vector_store.add_course_metadata(course)
-                        self.vector_store.add_course_content(course_chunks)
-                        total_courses += 1
-                        total_chunks += len(course_chunks)
-                        print(
-                            f"Added new course: {course.title} ({len(course_chunks)} chunks)"
+                    if file_path.lower().endswith(".pdf"):
+                        dokument, dok_chunks = self.pdf_processor.process_pdf_document(
+                            file_path
                         )
-                        existing_course_titles.add(course.title)
-                    elif course:
-                        print(f"Course already exists: {course.title} - skipping")
-                except Exception as e:
-                    print(f"Error processing {file_name}: {e}")
+                    else:
+                        dokument, dok_chunks = self.document_processor.process_document(
+                            file_path
+                        )
 
-        return total_courses, total_chunks
+                    if dokument and dokument.titel not in vorhandene_titel:
+                        self.vector_store.add_dokument_metadata(dokument)
+                        self.vector_store.add_dokument_inhalt(dok_chunks)
+                        gesamt_dokumente += 1
+                        gesamt_chunks += len(dok_chunks)
+                        print(
+                            f"Dokument hinzugefügt: {dokument.titel} ({len(dok_chunks)} Chunks)"
+                        )
+                        vorhandene_titel.add(dokument.titel)
+                    elif dokument:
+                        print(f"Dokument bereits vorhanden: {dokument.titel} — übersprungen")
+                except Exception as e:
+                    print(f"Fehler beim Verarbeiten von {file_name}: {e}")
+
+        return gesamt_dokumente, gesamt_chunks
 
     def query(
         self, query: str, session_id: Optional[str] = None
     ) -> Tuple[str, List[str], List[str]]:
         """
-        Process a user query using the RAG system with tool-based search.
+        Verarbeitet eine Benutzeranfrage mit dem RAG-System.
 
         Args:
-            query: User's question
-            session_id: Optional session ID for conversation context
+            query: Frage des Benutzers
+            session_id: Optionale Sitzungs-ID für Gesprächskontext
 
         Returns:
-            Tuple of (response, sources list, source_links list)
+            Tuple aus (Antwort, Quellenliste, Quellenlink-Liste)
         """
-        # Create prompt for the AI with clear instructions
-        prompt = f"""Answer this question about course materials: {query}"""
+        prompt = f"Beantworten Sie diese Frage zu deutschen Regulierungsdokumenten: {query}"
 
-        # Get conversation history if session exists
         history = None
         if session_id:
             history = self.session_manager.get_conversation_history(session_id)
 
-        # Generate response using AI with tools
         response = self.ai_generator.generate_response(
             query=prompt,
             conversation_history=history,
@@ -148,23 +146,35 @@ class RAGSystem:
             tool_manager=self.tool_manager,
         )
 
-        # Get sources and source links from the search tool
         sources = self.tool_manager.get_last_sources()
         source_links = self.tool_manager.get_last_source_links()
 
-        # Reset sources after retrieving them
         self.tool_manager.reset_sources()
 
-        # Update conversation history
         if session_id:
             self.session_manager.add_exchange(session_id, query, response)
 
-        # Return response with sources and links from tool searches
         return response, sources, source_links
 
-    def get_course_analytics(self) -> Dict:
-        """Get analytics about the course catalog"""
+    def get_dokument_statistiken(self) -> Dict:
+        """Gibt Statistiken über den Dokumentkatalog zurück"""
+        titel_liste = self.vector_store.get_existing_dokument_titel()
+        alle_metadata = self.vector_store.get_all_dokumente_metadata()
+
+        dokumente = []
+        meta_by_titel = {m.get("titel", ""): m for m in alle_metadata}
+        for titel in titel_liste:
+            meta = meta_by_titel.get(titel, {})
+            dokumente.append(
+                {
+                    "titel": titel,
+                    "herausgeber": meta.get("herausgeber", ""),
+                    "dokument_quelle": meta.get("dokument_quelle", ""),
+                }
+            )
+
         return {
-            "total_courses": self.vector_store.get_course_count(),
-            "course_titles": self.vector_store.get_existing_course_titles(),
+            "gesamt_dokumente": self.vector_store.get_dokument_anzahl(),
+            "dokument_titel": titel_liste,
+            "dokumente": dokumente,
         }

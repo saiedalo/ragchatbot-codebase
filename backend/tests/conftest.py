@@ -10,59 +10,59 @@ from fastapi.testclient import TestClient
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config import Config
-from models import Course, CourseChunk, Lesson
+from models import Abschnitt, Dokument, DokumentChunk
 from vector_store import SearchResults
 
 
 @pytest.fixture
-def sample_course():
-    """Create a sample course for testing"""
-    lessons = [
-        Lesson(
-            lesson_number=1,
-            title="Introduction",
-            lesson_link="https://example.com/lesson1",
+def sample_dokument():
+    """Erstellt ein Beispieldokument für Tests"""
+    abschnitte = [
+        Abschnitt(
+            abschnitt_nummer=1,
+            titel="Anwendungsbereich",
+            abschnitt_quelle="https://example.com/abschnitt1",
         ),
-        Lesson(
-            lesson_number=2,
-            title="Advanced Topics",
-            lesson_link="https://example.com/lesson2",
+        Abschnitt(
+            abschnitt_nummer=2,
+            titel="Anforderungen an das Risikomanagement",
+            abschnitt_quelle="https://example.com/abschnitt2",
         ),
-        Lesson(
-            lesson_number=3,
-            title="Conclusion",
-            lesson_link="https://example.com/lesson3",
+        Abschnitt(
+            abschnitt_nummer=3,
+            titel="Schlussbestimmungen",
+            abschnitt_quelle="https://example.com/abschnitt3",
         ),
     ]
 
-    return Course(
-        title="Building Towards Computer Use with Anthropic",
-        course_link="https://example.com/course",
-        instructor="Colt Steele",
-        lessons=lessons,
+    return Dokument(
+        titel="MaRisk - Mindestanforderungen an das Risikomanagement",
+        dokument_quelle="https://example.com/marisk",
+        herausgeber="BaFin",
+        abschnitte=abschnitte,
     )
 
 
 @pytest.fixture
-def sample_course_chunks():
-    """Create sample course chunks for testing"""
+def sample_dokument_chunks():
+    """Erstellt Beispiel-Chunks für Tests"""
     return [
-        CourseChunk(
-            content="Welcome to Building Toward Computer Use with Anthropic. This course covers computer automation.",
-            course_title="Building Towards Computer Use with Anthropic",
-            lesson_number=1,
+        DokumentChunk(
+            inhalt="Willkommen zu den MaRisk. Dieses Rundschreiben enthält Mindestanforderungen an das Risikomanagement.",
+            dokument_titel="MaRisk - Mindestanforderungen an das Risikomanagement",
+            abschnitt_nummer=1,
             chunk_index=0,
         ),
-        CourseChunk(
-            content="In this lesson, we'll explore advanced topics including tool calling and agent workflows.",
-            course_title="Building Towards Computer Use with Anthropic",
-            lesson_number=2,
+        DokumentChunk(
+            inhalt="In diesem Abschnitt werden die Anforderungen an die Risikosteuerung und -überwachung erläutert.",
+            dokument_titel="MaRisk - Mindestanforderungen an das Risikomanagement",
+            abschnitt_nummer=2,
             chunk_index=1,
         ),
-        CourseChunk(
-            content="Computer use capability is built by using many features of large language models.",
-            course_title="Building Towards Computer Use with Anthropic",
-            lesson_number=1,
+        DokumentChunk(
+            inhalt="Die Kreditinstitute haben geeignete Prozesse zur Identifizierung, Beurteilung und Überwachung von Risiken einzurichten.",
+            dokument_titel="MaRisk - Mindestanforderungen an das Risikomanagement",
+            abschnitt_nummer=1,
             chunk_index=2,
         ),
     ]
@@ -70,21 +70,21 @@ def sample_course_chunks():
 
 @pytest.fixture
 def sample_search_results():
-    """Create sample search results for testing"""
+    """Erstellt Beispiel-Suchergebnisse für Tests"""
     return SearchResults(
         documents=[
-            "Welcome to Building Toward Computer Use with Anthropic. This course covers computer automation.",
-            "In this lesson, we'll explore advanced topics including tool calling and agent workflows.",
+            "Willkommen zu den MaRisk. Dieses Rundschreiben enthält Mindestanforderungen an das Risikomanagement.",
+            "In diesem Abschnitt werden die Anforderungen an die Risikosteuerung erläutert.",
         ],
         metadata=[
             {
-                "course_title": "Building Towards Computer Use with Anthropic",
-                "lesson_number": 1,
+                "dokument_titel": "MaRisk - Mindestanforderungen an das Risikomanagement",
+                "abschnitt_nummer": 1,
                 "chunk_index": 0,
             },
             {
-                "course_title": "Building Towards Computer Use with Anthropic",
-                "lesson_number": 2,
+                "dokument_titel": "MaRisk - Mindestanforderungen an das Risikomanagement",
+                "abschnitt_nummer": 2,
                 "chunk_index": 1,
             },
         ],
@@ -94,49 +94,47 @@ def sample_search_results():
 
 @pytest.fixture
 def empty_search_results():
-    """Create empty search results for testing"""
+    """Erstellt leere Suchergebnisse für Tests"""
     return SearchResults(documents=[], metadata=[], distances=[])
 
 
 @pytest.fixture
 def error_search_results():
-    """Create error search results for testing"""
-    return SearchResults.empty("Search error: Database connection failed")
+    """Erstellt Fehler-Suchergebnisse für Tests"""
+    return SearchResults.empty("Suchfehler: Datenbankverbindung fehlgeschlagen")
 
 
 @pytest.fixture
 def mock_vector_store():
-    """Create a mock vector store for testing"""
+    """Erstellt einen Mock-Vektorspeicher für Tests"""
     mock = Mock()
     mock.search.return_value = SearchResults(
-        documents=["Sample document content"],
-        metadata=[{"course_title": "Test Course", "lesson_number": 1}],
+        documents=["Beispiel-Dokumentinhalt"],
+        metadata=[{"dokument_titel": "Test Dokument", "abschnitt_nummer": 1}],
         distances=[0.1],
     )
-    mock._resolve_course_name.return_value = "Test Course"
-    mock.get_lesson_link.return_value = "https://example.com/lesson1"
+    mock._resolve_dokument_name.return_value = "Test Dokument"
+    mock.get_abschnitt_quelle.return_value = "https://example.com/abschnitt1"
     return mock
 
 
 @pytest.fixture
 def mock_anthropic_client():
-    """Create a mock Anthropic client for testing"""
+    """Erstellt einen Mock Anthropic-Client für Tests"""
     mock_client = Mock()
 
-    # Mock response for direct text response
     mock_response = Mock()
     mock_response.content = [Mock()]
-    mock_response.content[0].text = "This is a test response from Claude."
+    mock_response.content[0].text = "Dies ist eine Testantwort von Claude."
     mock_response.stop_reason = "end_turn"
 
-    # Mock response for tool use
     mock_tool_response = Mock()
     mock_tool_response.stop_reason = "tool_use"
     mock_tool_content = Mock()
     mock_tool_content.type = "tool_use"
-    mock_tool_content.name = "search_course_content"
+    mock_tool_content.name = "regulierungsdokument_suchen"
     mock_tool_content.id = "tool_123"
-    mock_tool_content.input = {"query": "test query"}
+    mock_tool_content.input = {"suchanfrage": "Testanfrage"}
     mock_tool_response.content = [mock_tool_content]
 
     mock_client.messages.create.return_value = mock_response
@@ -145,37 +143,37 @@ def mock_anthropic_client():
 
 @pytest.fixture
 def mock_tool_manager():
-    """Create a mock tool manager for testing"""
+    """Erstellt einen Mock-Werkzeugmanager für Tests"""
     mock = Mock()
     mock.get_tool_definitions.return_value = [
         {
-            "name": "search_course_content",
-            "description": "Search course materials",
+            "name": "regulierungsdokument_suchen",
+            "description": "Durchsucht Regulierungsdokumente",
             "input_schema": {
                 "type": "object",
                 "properties": {
-                    "query": {"type": "string", "description": "What to search for"}
+                    "suchanfrage": {"type": "string", "description": "Was gesucht werden soll"}
                 },
-                "required": ["query"],
+                "required": ["suchanfrage"],
             },
         }
     ]
-    mock.execute_tool.return_value = "Mock search result"
-    mock.get_last_sources.return_value = ["Test Course - Lesson 1"]
-    mock.get_last_source_links.return_value = ["https://example.com/lesson1"]
+    mock.execute_tool.return_value = "Mock-Suchergebnis"
+    mock.get_last_sources.return_value = ["MaRisk - Abschnitt 1"]
+    mock.get_last_source_links.return_value = ["https://example.com/abschnitt1"]
     return mock
 
 
 @pytest.fixture
 def test_config():
-    """Create a test configuration with proper settings"""
+    """Erstellt eine Testkonfiguration mit korrekten Einstellungen"""
     return Config(
         ANTHROPIC_API_KEY="test-api-key",
-        ANTHROPIC_MODEL="claude-sonnet-4-20250514",
+        ANTHROPIC_MODEL="claude-sonnet-4-6",
         EMBEDDING_MODEL="all-MiniLM-L6-v2",
         CHUNK_SIZE=800,
         CHUNK_OVERLAP=100,
-        MAX_RESULTS=5,  # Set to proper value, not 0
+        MAX_RESULTS=5,
         MAX_HISTORY=2,
         CHROMA_PATH="./test_chroma_db",
     )
@@ -183,14 +181,14 @@ def test_config():
 
 @pytest.fixture
 def broken_config():
-    """Create a configuration with the broken MAX_RESULTS=0 setting"""
+    """Erstellt eine Konfiguration mit defektem MAX_RESULTS=0"""
     return Config(
         ANTHROPIC_API_KEY="test-api-key",
-        ANTHROPIC_MODEL="claude-sonnet-4-20250514",
+        ANTHROPIC_MODEL="claude-sonnet-4-6",
         EMBEDDING_MODEL="all-MiniLM-L6-v2",
         CHUNK_SIZE=800,
         CHUNK_OVERLAP=100,
-        MAX_RESULTS=0,  # This is the broken setting
+        MAX_RESULTS=0,
         MAX_HISTORY=2,
         CHROMA_PATH="./test_chroma_db",
     )
@@ -198,10 +196,9 @@ def broken_config():
 
 @pytest.fixture
 def temp_chroma_db():
-    """Create a temporary ChromaDB directory for testing"""
+    """Erstellt ein temporäres ChromaDB-Verzeichnis für Tests"""
     temp_dir = tempfile.mkdtemp()
     yield temp_dir
-    # Cleanup after test
     import shutil
 
     shutil.rmtree(temp_dir, ignore_errors=True)
@@ -209,61 +206,64 @@ def temp_chroma_db():
 
 @pytest.fixture
 def mock_chroma_collection():
-    """Create a mock ChromaDB collection for testing"""
+    """Erstellt eine Mock ChromaDB-Collection für Tests"""
     mock = Mock()
     mock.query.return_value = {
-        "documents": [["Sample document"]],
-        "metadatas": [[{"course_title": "Test Course", "lesson_number": 1}]],
+        "documents": [["Beispiel Dokument"]],
+        "metadatas": [[{"dokument_titel": "Test Dokument", "abschnitt_nummer": 1}]],
         "distances": [[0.1]],
     }
     mock.get.return_value = {
-        "ids": ["test_course_1"],
+        "ids": ["test_dokument_1"],
         "metadatas": [
             {
-                "title": "Test Course",
-                "instructor": "Test Instructor",
-                "course_link": "https://example.com/course",
-                "lessons_json": '[{"lesson_number": 1, "lesson_title": "Test Lesson", "lesson_link": "https://example.com/lesson1"}]',
-                "lesson_count": 1,
+                "titel": "Test Dokument",
+                "herausgeber": "BaFin",
+                "dokument_quelle": "https://example.com/dokument",
+                "abschnitte_json": '[{"abschnitt_nummer": 1, "abschnitt_titel": "Abschnitt 1", "abschnitt_quelle": "https://example.com/abschnitt1"}]',
+                "abschnitt_anzahl": 1,
             }
         ],
     }
     return mock
 
 
-# Test data constants
-SAMPLE_COURSE_TEXT = """Course Title: Building Towards Computer Use with Anthropic
-Course Link: https://www.deeplearning.ai/short-courses/building-toward-computer-use-with-anthropic/
-Course Instructor: Colt Steele
+# Test-Datenkonstanten
+SAMPLE_DOKUMENT_TEXT = """Dokument-Titel: MaRisk - Mindestanforderungen an das Risikomanagement
+Dokument-Quelle: https://www.bafin.de/marisk
+Herausgeber: BaFin
 
-Lesson 1: Introduction
-Lesson Link: https://learn.deeplearning.ai/courses/building-toward-computer-use-with-anthropic/lesson/1/introduction
-Welcome to Building Toward Computer Use with Anthropic. This course covers computer automation.
+Abschnitt 1: Anwendungsbereich
+Abschnitt-Quelle: https://www.bafin.de/marisk/abschnitt1
+Dieses Rundschreiben richtet sich an alle Kreditinstitute im Sinne des KWG.
 
-Lesson 2: Advanced Topics  
-Lesson Link: https://learn.deeplearning.ai/courses/building-toward-computer-use-with-anthropic/lesson/2/advanced
-In this lesson, we'll explore advanced topics including tool calling and agent workflows.
+Abschnitt 2: Anforderungen an das Risikomanagement
+Abschnitt-Quelle: https://www.bafin.de/marisk/abschnitt2
+Die Institute haben angemessene Prozesse zur Identifizierung und Steuerung von Risiken einzurichten.
 """
 
 SAMPLE_QUERY_RESPONSES = {
-    "general": "This is a general knowledge response.",
-    "course_specific": "Based on the search results, here is information about the course content.",
-    "tool_use": "I'll search for that information in the course materials.",
+    "allgemein": "Dies ist eine allgemeine Wissensantwort.",
+    "regulierungsspezifisch": "Basierend auf den Suchergebnissen hier die regulatorischen Anforderungen.",
+    "werkzeugnutzung": "Ich suche nach den relevanten Informationen in den Regulierungsdokumenten.",
 }
 
 
 @pytest.fixture
 def mock_rag_system():
-    """Create a mock RAG system for API testing"""
+    """Erstellt ein Mock-RAG-System für API-Tests"""
     mock = Mock()
     mock.query.return_value = (
-        "This is a test response about course content.",
-        ["Building Towards Computer Use with Anthropic - Lesson 1"],
-        ["https://example.com/lesson1"]
+        "Dies ist eine Testantwort zu den Regulierungsanforderungen.",
+        ["MaRisk - Mindestanforderungen - Abschnitt 1"],
+        ["https://example.com/abschnitt1"],
     )
-    mock.get_course_analytics.return_value = {
-        "total_courses": 2,
-        "course_titles": ["Building Towards Computer Use with Anthropic", "Advanced AI Techniques"]
+    mock.get_dokument_statistiken.return_value = {
+        "gesamt_dokumente": 2,
+        "dokument_titel": [
+            "MaRisk - Mindestanforderungen an das Risikomanagement",
+            "BAIT - Bankaufsichtliche Anforderungen an die IT",
+        ],
     }
     mock.session_manager.create_session.return_value = "test-session-123"
     mock.session_manager.clear_session.return_value = None
@@ -272,17 +272,16 @@ def mock_rag_system():
 
 @pytest.fixture
 def test_app():
-    """Create a test FastAPI app with mocked dependencies"""
+    """Erstellt eine Test-FastAPI-App mit gemockten Abhängigkeiten"""
+    from typing import List, Optional
+
     from fastapi import FastAPI
     from fastapi.middleware.cors import CORSMiddleware
     from fastapi.middleware.trustedhost import TrustedHostMiddleware
     from pydantic import BaseModel
-    from typing import List, Optional
-    
-    # Create test app without static file mounting
-    app = FastAPI(title="Course Materials RAG System Test", root_path="")
-    
-    # Add middleware
+
+    app = FastAPI(title="Regulierungs-Assistent RAG System Test", root_path="")
+
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
     app.add_middleware(
         CORSMiddleware,
@@ -292,8 +291,7 @@ def test_app():
         allow_headers=["*"],
         expose_headers=["*"],
     )
-    
-    # Pydantic models
+
     class QueryRequest(BaseModel):
         query: str
         session_id: Optional[str] = None
@@ -304,28 +302,29 @@ def test_app():
         source_links: List[Optional[str]]
         session_id: str
 
-    class CourseStats(BaseModel):
-        total_courses: int
-        course_titles: List[str]
+    class DokumentStats(BaseModel):
+        gesamt_dokumente: int
+        dokument_titel: List[str]
 
     class ClearSessionRequest(BaseModel):
         session_id: str
-    
-    # Mock RAG system
+
     mock_rag = Mock()
     mock_rag.query.return_value = (
-        "This is a test response about course content.",
-        ["Building Towards Computer Use with Anthropic - Lesson 1"],
-        ["https://example.com/lesson1"]
+        "Dies ist eine Testantwort zu den Regulierungsanforderungen.",
+        ["MaRisk - Mindestanforderungen - Abschnitt 1"],
+        ["https://example.com/abschnitt1"],
     )
-    mock_rag.get_course_analytics.return_value = {
-        "total_courses": 2,
-        "course_titles": ["Building Towards Computer Use with Anthropic", "Advanced AI Techniques"]
+    mock_rag.get_dokument_statistiken.return_value = {
+        "gesamt_dokumente": 2,
+        "dokument_titel": [
+            "MaRisk - Mindestanforderungen an das Risikomanagement",
+            "BAIT - Bankaufsichtliche Anforderungen an die IT",
+        ],
     }
     mock_rag.session_manager.create_session.return_value = "test-session-123"
     mock_rag.session_manager.clear_session.return_value = None
-    
-    # API endpoints
+
     @app.post("/api/query", response_model=QueryResponse)
     async def query_documents(request: QueryRequest):
         session_id = request.session_id or mock_rag.session_manager.create_session()
@@ -334,47 +333,45 @@ def test_app():
             answer=answer,
             sources=sources,
             source_links=source_links,
-            session_id=session_id
+            session_id=session_id,
         )
 
-    @app.get("/api/courses", response_model=CourseStats)
-    async def get_course_stats():
-        analytics = mock_rag.get_course_analytics()
-        return CourseStats(
-            total_courses=analytics["total_courses"],
-            course_titles=analytics["course_titles"]
+    @app.get("/api/dokumente", response_model=DokumentStats)
+    async def get_dokument_stats():
+        statistiken = mock_rag.get_dokument_statistiken()
+        return DokumentStats(
+            gesamt_dokumente=statistiken["gesamt_dokumente"],
+            dokument_titel=statistiken["dokument_titel"],
         )
 
     @app.post("/api/clear-session")
     async def clear_session(request: ClearSessionRequest):
         mock_rag.session_manager.clear_session(request.session_id)
-        return {"status": "success", "message": "Session cleared successfully"}
-    
+        return {"status": "success", "message": "Sitzung erfolgreich gelöscht"}
+
     @app.get("/")
     async def root():
-        return {"message": "Course Materials RAG System API"}
-    
+        return {"message": "Regulierungs-Assistent RAG System API"}
+
     return app
 
 
 @pytest.fixture
 def client(test_app):
-    """Create a test client for the FastAPI app"""
+    """Erstellt einen Test-Client für die FastAPI-App"""
     return TestClient(test_app)
 
 
 @pytest.fixture
 def sample_query_request():
-    """Sample query request for testing"""
+    """Beispiel-Anfrage für Tests"""
     return {
-        "query": "What is computer use in AI?",
-        "session_id": "test-session-123"
+        "query": "Was sind die MaRisk-Anforderungen an das Risikomanagement?",
+        "session_id": "test-session-123",
     }
 
 
 @pytest.fixture
 def sample_clear_session_request():
-    """Sample clear session request for testing"""
-    return {
-        "session_id": "test-session-123"
-    }
+    """Beispiel-Anfrage zum Löschen einer Sitzung"""
+    return {"session_id": "test-session-123"}

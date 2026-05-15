@@ -3,6 +3,7 @@ import warnings
 warnings.filterwarnings("ignore", message="resource_tracker: There appear to be.*")
 
 import os
+import shutil
 from typing import List, Optional
 
 from config import config
@@ -11,15 +12,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from rag_system import RAGSystem
 
-# Initialize FastAPI app
-app = FastAPI(title="Course Materials RAG System", root_path="")
+app = FastAPI(title="Regulierungs-Assistent RAG System", root_path="")
 
-# Add trusted host middleware for proxy
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
 
-# Enable CORS with proper settings for proxy
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -29,20 +26,19 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
-# Initialize RAG system
-rag_system = RAGSystem(config)
+# RAG-System wird im Startup-Event initialisiert
+rag_system = None
 
 
-# Pydantic models for request/response
 class QueryRequest(BaseModel):
-    """Request model for course queries"""
+    """Anfrage-Modell für Regulierungsanfragen"""
 
     query: str
     session_id: Optional[str] = None
 
 
 class QueryResponse(BaseModel):
-    """Response model for course queries"""
+    """Antwort-Modell für Regulierungsanfragen"""
 
     answer: str
     sources: List[str]
@@ -50,32 +46,39 @@ class QueryResponse(BaseModel):
     session_id: str
 
 
-class CourseStats(BaseModel):
-    """Response model for course statistics"""
+class DokumentInfo(BaseModel):
+    """Einzelnes Dokument mit Metadaten"""
 
-    total_courses: int
-    course_titles: List[str]
+    titel: str
+    herausgeber: str = ""
+    dokument_quelle: str = ""
+
+
+class DokumentStats(BaseModel):
+    """Antwort-Modell für Dokumentstatistiken"""
+
+    gesamt_dokumente: int
+    dokument_titel: List[str]
+    dokumente: List[DokumentInfo] = []
 
 
 class ClearSessionRequest(BaseModel):
-    """Request model for clearing a session"""
+    """Anfrage-Modell zum Löschen einer Sitzung"""
 
     session_id: str
 
 
-# API Endpoints
+# API-Endpunkte
 
 
 @app.post("/api/query", response_model=QueryResponse)
 async def query_documents(request: QueryRequest):
-    """Process a query and return response with sources"""
+    """Verarbeitet eine Anfrage und gibt die Antwort mit Quellen zurück"""
     try:
-        # Create session if not provided
         session_id = request.session_id
         if not session_id:
             session_id = rag_system.session_manager.create_session()
 
-        # Process query using RAG system
         answer, sources, source_links = rag_system.query(request.query, session_id)
 
         return QueryResponse(
@@ -88,14 +91,23 @@ async def query_documents(request: QueryRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/courses", response_model=CourseStats)
-async def get_course_stats():
-    """Get course analytics and statistics"""
+@app.get("/api/dokumente", response_model=DokumentStats)
+async def get_dokument_stats():
+    """Gibt Dokumentstatistiken zurück"""
     try:
-        analytics = rag_system.get_course_analytics()
-        return CourseStats(
-            total_courses=analytics["total_courses"],
-            course_titles=analytics["course_titles"],
+        statistiken = rag_system.get_dokument_statistiken()
+        dokumente = [
+            DokumentInfo(
+                titel=d["titel"],
+                herausgeber=d.get("herausgeber", ""),
+                dokument_quelle=d.get("dokument_quelle", ""),
+            )
+            for d in statistiken.get("dokumente", [])
+        ]
+        return DokumentStats(
+            gesamt_dokumente=statistiken["gesamt_dokumente"],
+            dokument_titel=statistiken["dokument_titel"],
+            dokumente=dokumente,
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -103,35 +115,58 @@ async def get_course_stats():
 
 @app.post("/api/clear-session")
 async def clear_session(request: ClearSessionRequest):
-    """Clear a conversation session"""
+    """Löscht eine Gesprächssitzung"""
     try:
         rag_system.session_manager.clear_session(request.session_id)
-        return {"status": "success", "message": "Session cleared successfully"}
+        return {"status": "success", "message": "Sitzung erfolgreich gelöscht"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
+def _migrate_chroma_if_needed(chroma_path: str) -> None:
+    """Löscht altes ChromaDB-Schema wenn alte Collections (course_catalog) erkannt werden"""
+    if not os.path.exists(chroma_path):
+        return
+    try:
+        import chromadb
+
+        temp_client = chromadb.PersistentClient(path=chroma_path)
+        existing = [c.name for c in temp_client.list_collections()]
+        if "course_catalog" in existing or "course_content" in existing:
+            print("Altes Datenbankschema erkannt — bereinige ChromaDB...")
+            del temp_client
+            shutil.rmtree(chroma_path)
+            print("ChromaDB bereinigt. Neues Schema wird erstellt.")
+    except Exception:
+        pass
+
+
 @app.on_event("startup")
 async def startup_event():
-    """Load initial documents on startup"""
+    """Lädt initiale Dokumente beim Start"""
+    global rag_system
+
+    _migrate_chroma_if_needed(config.CHROMA_PATH)
+
+    from rag_system import RAGSystem
+
+    rag_system = RAGSystem(config)
+
     docs_path = "../docs"
     if os.path.exists(docs_path):
-        print("Loading initial documents...")
+        print("Lade regulatorische Dokumente...")
         try:
-            courses, chunks = rag_system.add_course_folder(
+            dokumente, chunks = rag_system.add_dokument_ordner(
                 docs_path, clear_existing=False
             )
-            print(f"Loaded {courses} courses with {chunks} chunks")
+            print(f"{dokumente} Dokumente mit {chunks} Chunks geladen")
         except Exception as e:
-            print(f"Error loading documents: {e}")
+            print(f"Fehler beim Laden der Dokumente: {e}")
 
 
-import os
 from pathlib import Path
 
 from fastapi.responses import FileResponse
-
-# Custom static file handler with no-cache headers for development
 from fastapi.staticfiles import StaticFiles
 
 
@@ -139,12 +174,10 @@ class DevStaticFiles(StaticFiles):
     async def get_response(self, path: str, scope):
         response = await super().get_response(path, scope)
         if isinstance(response, FileResponse):
-            # Add no-cache headers for development
             response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
             response.headers["Pragma"] = "no-cache"
             response.headers["Expires"] = "0"
         return response
 
 
-# Serve static files for the frontend
 app.mount("/", StaticFiles(directory="../frontend", html=True), name="static")

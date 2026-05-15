@@ -1,0 +1,99 @@
+Dokument-Titel: MaRisk - Mindestanforderungen an das Risikomanagement (Rundschreiben 09/2017 in der Fassung vom 26.10.2021)
+Dokument-Quelle: https://www.bafin.de/DE/Aufsicht/BankenFinanzdienstleister/Aufsichtsrecht/Rundschreiben/rundschreiben_node.html
+Herausgeber: BaFin - Bundesanstalt für Finanzdienstleistungsaufsicht
+
+Abschnitt 1: AT 1 - Vorbemerkungen
+Die Mindestanforderungen an das Risikomanagement (MaRisk) konkretisieren die Anforderungen des § 25a Abs. 1 KWG an eine ordnungsgemäße Geschäftsorganisation. Sie richten sich an alle Kredit- und Finanzdienstleistungsinstitute, die dem KWG unterliegen.
+
+Die MaRisk sind prinzipienorientiert formuliert und belassen den Instituten bei der Umsetzung bewusst Spielräume. Kleinere Institute mit überschaubaren Geschäftsaktivitäten und einfachen Risikostrukturen können die Anforderungen mit einem geringeren Aufwand erfüllen als komplexe Großbanken (Proportionalitätsprinzip).
+
+Die MaRisk bestehen aus einem Allgemeinen Teil (AT) und einem Besonderen Teil (BT). Der AT enthält institutsbezogene Anforderungen, die für alle Institute gelten. Der BT enthält Anforderungen für spezifische Risikoarten und Funktionen.
+
+Abschnitt-Quelle: https://www.bafin.de/SharedDocs/Downloads/DE/Rundschreiben/dl_rs_0917_ba_MaRisk.html
+
+Abschnitt 2: AT 2 - Anwendungsbereich und Risikoinventur
+AT 2.1 - Anwendungsbereich: Die MaRisk gelten für alle Kredit- und Finanzdienstleistungsinstitute im Sinne des § 1 KWG. Institute, die einer Institutsgruppe oder einem Finanzkonglomerat angehören, haben sicherzustellen, dass alle wesentlichen Risiken auf Gruppenebene erfasst und in einem angemessenen Risikomanagementsystem gesteuert werden.
+
+AT 2.2 - Risikoinventur: Die Institute haben im Rahmen einer Risikoinventur alle wesentlichen Risiken zu identifizieren. Wesentlich sind Risiken, die die Vermögens-, Ertrags- oder Liquiditätslage eines Instituts erheblich beeinträchtigen können.
+
+Wesentliche Risikoarten umfassen insbesondere:
+- Adressenausfallrisiken (Kreditrisiken)
+- Marktpreisrisiken
+- Liquiditätsrisiken
+- Operationelle Risiken
+
+Darüber hinaus können weitere Risikoarten wesentlich sein, insbesondere Reputationsrisiken, Refinanzierungsrisiken und Risiken aus dem Beteiligungsportfolio. Die Risikoinventur ist regelmäßig, mindestens jährlich, zu überprüfen.
+
+Abschnitt-Quelle: https://www.bafin.de/SharedDocs/Downloads/DE/Rundschreiben/dl_rs_0917_ba_MaRisk.html
+
+Abschnitt 3: AT 3 - Risikotragfähigkeit
+Die Institute haben sicherzustellen, dass die wesentlichen Risiken durch das vorhandene Risikodeckungspotenzial laufend abgedeckt sind und damit die Risikotragfähigkeit gegeben ist. In diesem Zusammenhang ist ein Risikotragfähigkeitskonzept zu entwickeln, das den internen Steuerungskreis und den normativen Steuerungskreis umfasst.
+
+Normativer Managementprozess: Dieser Steuerungskreis ist zukunftsorientiert und schaut auf regulatorische Kapitalquoten sowie auf die Auswirkungen von Risiken auf die Bilanzsituation des Instituts. Er soll sicherstellen, dass das Institut die relevanten Kapitalanforderungen jederzeit erfüllen kann.
+
+Ökonomischer Steuerungskreis: Dieser Steuerungskreis zeigt auf, inwieweit das Institut aus einer ökonomischen Perspektive in der Lage ist, seine Risiken zu tragen. Hier wird das interne Risikodeckungspotenzial den quantifizierten Risiken gegenübergestellt.
+
+Stresstests: Die Institute müssen sowohl für den normativen als auch für den ökonomischen Steuerungskreis Stresstests durchführen. Die Stresstests sollen die Auswirkungen adverser Szenarien auf die Risikotragfähigkeit zeigen und dabei auch Wechselwirkungen zwischen den verschiedenen Risikoarten berücksichtigen.
+
+Abschnitt-Quelle: https://www.bafin.de/SharedDocs/Downloads/DE/Rundschreiben/dl_rs_0917_ba_MaRisk.html
+
+Abschnitt 4: AT 4 - Allgemeine Anforderungen an das Risikomanagement
+AT 4.1 - Aufbau- und Ablauforganisation: Die Aufbauorganisation ist so zu gestalten, dass Interessenkonflikte vermieden werden. Dabei sind Tätigkeiten, die miteinander unvereinbar sind, grundsätzlich verschiedenen Mitarbeitern zuzuweisen (Funktionstrennung). Das Vier-Augen-Prinzip ist zu beachten.
+
+AT 4.2 - Strategien: Das Institut hat eine Geschäftsstrategie zu entwickeln, die die Ziele des Instituts für jede wesentliche Geschäftstätigkeit sowie die Maßnahmen zur Erreichung dieser Ziele enthält. Auf Basis der Geschäftsstrategie ist eine konsistente Risikostrategie zu entwickeln, die die Ziele des Instituts für jede wesentliche Risikoart sowie die Maßnahmen zur Erreichung dieser Ziele enthält. Geschäfts- und Risikostrategie sind aufeinander abzustimmen und regelmäßig, mindestens jährlich, zu überprüfen.
+
+AT 4.3 - Risikosteuerung und -controlling: Die Risikosteuerung und das Risikocontrolling sind als eigenständige Funktionen zu etablieren. Das Risikocontrolling umfasst insbesondere folgende Aufgaben: Entwicklung und Überwachung von Risikomess- und Risikosteuerungsverfahren, Überwachung der Risiken auf Gesamtinstitutsebene, Durchführung von Stresstests, Erstellung von Risikoberichten. Das Risikocontrolling ist von Bereichen, die Risiken eingehen (Marktbereiche), zu trennen. Der Leiter des Risikocontrollings (CRO) hat direkten Zugang zur Geschäftsleitung.
+
+Anforderungen an die Risikosteuerung AT 4.3: Die Risikosteuerungsmaßnahmen müssen zeitnah und adäquat auf identifizierte Risiken reagieren können. Risikopositionen sind durch geeignete Instrumente zu steuern, zum Beispiel durch Limitierung, Hedging oder Diversifikation. Die Wirksamkeit der Steuerungsmaßnahmen ist regelmäßig zu überprüfen. Dabei sind die Auswirkungen auf das Gesamtrisikoprofil des Instituts zu beachten. Für alle wesentlichen Risikoarten müssen aussagekräftige Risikokennzahlen und Limite definiert und überwacht werden.
+
+AT 4.4 - Interne Kontrollverfahren: Die internen Kontrollverfahren umfassen das interne Kontrollsystem (IKS) sowie die Interne Revision. Das IKS besteht aus aufbau- und ablauforganisatorischen Regelungen sowie Kontrollen. Die Interne Revision prüft und beurteilt unabhängig und regelmäßig alle Aktivitäten des Instituts auf ihre Angemessenheit und Wirksamkeit.
+
+AT 4.5 - Risikoreporting: Die Geschäftsleitung ist regelmäßig, mindestens vierteljährlich, über die Risikosituation des Instituts zu informieren. Die Risikoberichte müssen vollständig, aussagekräftig und angemessen sein. Sie müssen alle wesentlichen Informationen enthalten, die die Geschäftsleitung für Entscheidungen benötigt. Im Falle einer wesentlichen Risikoverschlechterung ist die Geschäftsleitung unverzüglich zu informieren (ad-hoc-Berichterstattung).
+
+Abschnitt-Quelle: https://www.bafin.de/SharedDocs/Downloads/DE/Rundschreiben/dl_rs_0917_ba_MaRisk.html
+
+Abschnitt 5: AT 5 - Organisationsrichtlinien
+Die Institute haben für alle wesentlichen Tätigkeiten, Prozesse und Risiken schriftliche Organisationsrichtlinien zu erlassen. Diese müssen allen betroffenen Mitarbeitern bekannt gemacht werden und sind regelmäßig zu überprüfen. Organisationsrichtlinien müssen insbesondere Regelungen enthalten zu: Aufgaben und Kompetenzen, Arbeitsabläufen und Kontrollen, Einschaltung Dritter, Notfallmanagement. Organisationsrichtlinien sind von der Geschäftsleitung oder von hierzu ermächtigten Personen zu genehmigen.
+
+Abschnitt-Quelle: https://www.bafin.de/SharedDocs/Downloads/DE/Rundschreiben/dl_rs_0917_ba_MaRisk.html
+
+Abschnitt 6: AT 6 - Dokumentation
+Die Prozesse und Tätigkeiten sind so zu dokumentieren, dass ein sachverständiger Dritter in der Lage ist, sich in angemessener Zeit einen Überblick über die Geschäfte und die damit verbundenen Risiken zu verschaffen. Die Dokumentation muss vollständig, nachvollziehbar und aktuell sein. Daten sind vollständig und richtig zu erfassen und zu verarbeiten. Die Integrität, Verfügbarkeit und Vertraulichkeit der Daten ist sicherzustellen.
+
+Abschnitt-Quelle: https://www.bafin.de/SharedDocs/Downloads/DE/Rundschreiben/dl_rs_0917_ba_MaRisk.html
+
+Abschnitt 7: AT 7 - Ressourcen
+AT 7.1 - Personal: Die Institute haben sicherzustellen, dass ausreichend qualifiziertes Personal vorhanden ist. Die Mitarbeiter müssen die für ihre Tätigkeit notwendigen Kenntnisse und Erfahrungen besitzen. Die Qualifikation der Mitarbeiter ist regelmäßig zu überprüfen und durch Schulungen zu erhalten und weiterzuentwickeln.
+
+AT 7.2 - Technisch-organisatorische Ausstattung: Die technisch-organisatorische Ausstattung muss dem Umfang und der Komplexität der betriebenen Geschäftsaktivitäten entsprechen. IT-Systeme, insbesondere für die Steuerung von Risiken, müssen angemessen sein. Die Anforderungen der BAIT (Bankaufsichtliche Anforderungen an die IT) sind zu beachten.
+
+AT 7.3 - Notfallkonzept: Institute haben ein Notfallkonzept zu entwickeln, das die Fortführung der zeitkritischen Aktivitäten und Prozesse sicherstellt und die Verluste für das Institut begrenzt. Das Notfallkonzept ist regelmäßig zu testen und anzupassen.
+
+Abschnitt-Quelle: https://www.bafin.de/SharedDocs/Downloads/DE/Rundschreiben/dl_rs_0917_ba_MaRisk.html
+
+Abschnitt 8: AT 8 - Anpassungsprozesse
+AT 8.1 - Neue Produkte und neue Märkte: Vor der Einführung neuer Produkte oder der Erschließung neuer Märkte ist eine Analyse der damit verbundenen Risiken durchzuführen (New Product Approval Process - NPAP). Die Analyse muss die Auswirkungen auf das Gesamtrisikoprofil des Instituts sowie auf die Risikotragfähigkeit berücksichtigen.
+
+AT 8.2 - Outsourcing: Bei Auslagerung von Aktivitäten und Prozessen auf ein anderes Unternehmen (Outsourcing) ist sicherzustellen, dass das Institut weiterhin alle aufsichtsrechtlichen Anforderungen erfüllt. Vor der Auslagerung ist eine Risikoanalyse durchzuführen. Die Steuerung und Kontrolle ausgelagerter Aktivitäten muss gewährleistet sein. Wesentliche Auslagerungen sind der BaFin anzuzeigen.
+
+Abschnitt-Quelle: https://www.bafin.de/SharedDocs/Downloads/DE/Rundschreiben/dl_rs_0917_ba_MaRisk.html
+
+Abschnitt 9: BTO - Besondere Anforderungen an das Kreditgeschäft
+BTO 1 - Kreditgewährung: Vor der Gewährung eines Kredits ist die Kreditwürdigkeit des Kreditnehmers sorgfältig zu prüfen. Kreditentscheidungen sind von Personen zu treffen, die über ausreichende Kenntnisse und Erfahrungen verfügen. Kreditentscheidungen sind zu dokumentieren. Besicherungsverträge sind regelmäßig auf ihre Werthaltigkeit zu überprüfen.
+
+BTO 2 - Kreditweiterverarbeitung und -verwaltung: Alle Kredite sind vollständig und zeitnah in den EDV-Systemen zu erfassen. Veränderungen in der Bonität der Kreditnehmer sind zeitnah zu erkennen und auszuwerten. Problemkredite sind frühzeitig zu identifizieren und intensiv zu betreuen.
+
+BTO 3 - Risikoklassifizierungsverfahren: Die Institute haben Risikoklassifizierungsverfahren einzusetzen, die eine Beurteilung der Ausfallwahrscheinlichkeit von Kreditnehmern und Transaktionen ermöglichen. Die Risikoklassifizierungsverfahren sind regelmäßig zu validieren und gegebenenfalls anzupassen.
+
+Abschnitt-Quelle: https://www.bafin.de/SharedDocs/Downloads/DE/Rundschreiben/dl_rs_0917_ba_MaRisk.html
+
+Abschnitt 10: BTR - Besondere Anforderungen an das Risikomanagement
+BTR 1 - Adressenausfallrisiken: Die Institute haben geeignete Verfahren zur Steuerung und Überwachung der Adressenausfallrisiken einzusetzen. Dazu gehören insbesondere Limite für Einzeladressen, Branchen und Länder sowie ein regelmäßiges Monitoring der Kreditportfolioqualität.
+
+BTR 2 - Marktpreisrisiken: Die Marktpreisrisiken sind täglich zu bewerten und zu überwachen. Für alle wesentlichen Marktrisikopositionen sind angemessene Risikolimite zu setzen. Limitüberschreitungen müssen unverzüglich gemeldet und bearbeitet werden.
+
+BTR 3 - Liquiditätsrisiken: Die Institute haben ein Liquiditätsmanagementsystem zu betreiben, das sicherstellt, dass die Zahlungsverpflichtungen jederzeit erfüllt werden können. Es sind ausreichende Liquiditätspuffer vorzuhalten. Liquiditätsstresstests sind regelmäßig durchzuführen.
+
+BTR 4 - Operationelle Risiken: Operationelle Risiken sind zu identifizieren, zu bewerten, zu steuern und zu überwachen. Dazu gehören insbesondere die Dokumentation und Analyse von Schadensfällen sowie das Management von Outsourcing-Risiken.
+
+Abschnitt-Quelle: https://www.bafin.de/SharedDocs/Downloads/DE/Rundschreiben/dl_rs_0917_ba_MaRisk.html

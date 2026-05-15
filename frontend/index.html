@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Course Materials Assistant</title>
-    <link rel="stylesheet" href="style.css?v=9">
+    <title>Regulierungs-Assistent</title>
+    <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
     <div class="container">
         <header>
             <div class="header-content">
                 <div class="header-text">
-                    <h1>Course Materials Assistant</h1>
-                    <p class="subtitle">Ask questions about courses, instructors, and content</p>
+                    <h1>Regulierungs-Assistent</h1>
+                    <p class="subtitle">Fragen zu Bankenregulierung, BaFin-Vorschriften und Compliance</p>
                 </div>
-                <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                <button id="themeToggle" class="theme-toggle" aria-label="Farbschema wechseln">
                     <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="5"></circle>
                         <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -41,21 +41,21 @@
             <aside class="sidebar">
                 <!-- New Chat Button -->
                 <div class="sidebar-section">
-                    <button id="newChatButton" class="new-chat-button">+ NEW CHAT</button>
+                    <button id="newChatButton" class="new-chat-button">+ NEUER CHAT</button>
                 </div>
 
-                <!-- Course Stats -->
+                <!-- Dokument Stats -->
                 <div class="sidebar-section">
                     <details class="stats-collapsible">
-                        <summary class="stats-header">Courses</summary>
+                        <summary class="stats-header">Regulierungsdokumente</summary>
                         <div class="course-stats" id="courseStats">
                             <div class="stat-item">
-                                <span class="stat-label">Number of courses:</span>
-                                <span class="stat-value" id="totalCourses">-</span>
+                                <span class="stat-label">Anzahl der Dokumente:</span>
+                                <span class="stat-value" id="totalDokumente">-</span>
                             </div>
                             <div class="stat-item">
-                                <div class="course-titles" id="courseTitles">
-                                    <span class="loading">Loading...</span>
+                                <div class="course-titles" id="dokumentTitel">
+                                    <span class="loading">Laden...</span>
                                 </div>
                             </div>
                         </div>
@@ -65,12 +65,12 @@
                 <!-- Suggested Questions -->
                 <div class="sidebar-section">
                     <details class="suggested-collapsible">
-                        <summary class="suggested-header">Try asking:</summary>
+                        <summary class="suggested-header">Fragen Sie zum Beispiel:</summary>
                         <div class="suggested-items">
-                            <button class="suggested-item" data-question="What is the outline of the &quot;MCP: Build Rich-Context AI Apps with Anthropic&quot; course?">Outline of a course</button>
-                            <button class="suggested-item" data-question="Are there any courses that include a Chatbot implementation?">Courses about Chatbot</button>
-                            <button class="suggested-item" data-question="Are there any courses that explain what RAG is?">Courses explaining RAG</button>
-                            <button class="suggested-item" data-question="What was covered in lesson 5 of the MCP course?">Details of a course's lesson</button>
+                            <button class="suggested-item" data-question="Was sind die Kernpflichten nach MaRisk AT 4.3 zur Risikosteuerung?">MaRisk AT 4.3 Anforderungen</button>
+                            <button class="suggested-item" data-question="Welche IT-Sicherheitsanforderungen stellt die BAIT an Kreditinstitute?">BAIT IT-Sicherheitsanforderungen</button>
+                            <button class="suggested-item" data-question="Welche Sorgfaltspflichten gelten nach den BaFin-Hinweisen zur Geldwäscheprävention?">AML-Sorgfaltspflichten</button>
+                            <button class="suggested-item" data-question="Was ist die Struktur des MaRisk-Rundschreibens?">Struktur eines Dokuments</button>
                         </div>
                     </details>
                 </div>
@@ -81,10 +81,10 @@
                 <div class="chat-container">
                     <div id="chatMessages" class="chat-messages"></div>
                     <div class="chat-input-container">
-                        <input 
-                            type="text" 
-                            id="chatInput" 
-                            placeholder="Ask about courses, lessons, or specific content..."
+                        <input
+                            type="text"
+                            id="chatInput"
+                            placeholder="Fragen Sie zu BaFin-Vorschriften, MaRisk oder Compliance..."
                             autocomplete="off"
                         >
                         <button id="sendButton">
@@ -101,6 +101,6 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="script.js?v=9"></script>
+    <script src="script.js?v=10"></script>
 </body>
 </html>

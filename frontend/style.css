@@ -714,27 +714,83 @@ details[open] .suggested-header::before {
     transform: rotate(90deg);
 }
 
-/* Course titles display */
+/* Course titles display (legacy) */
 .course-titles {
     margin-top: 0.5rem;
-    /* Remove max-height to show all titles without scrolling */
 }
 
-.course-title-item {
+.course-title-item,
+.dokument-titel-item {
     font-size: 0.85rem;
     color: var(--text-primary);
     padding: 0.5rem 0.25rem;
     border-bottom: 1px solid var(--border-color);
-    text-transform: none;
     line-height: 1.4;
 }
 
-.course-title-item:last-child {
+.course-title-item:last-child,
+.dokument-titel-item:last-child {
     border-bottom: none;
 }
 
-.course-title-item:first-child {
-    padding-top: 0.25rem;
+/* Structured document list */
+.dok-gruppe {
+    margin-bottom: 0.75rem;
+}
+
+.dok-gruppe:last-child {
+    margin-bottom: 0;
+}
+
+.dok-gruppe-header {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    padding: 0.5rem 0 0.35rem 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 0.35rem;
+}
+
+.dok-karte {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.5rem;
+    border-radius: 6px;
+    cursor: default;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+}
+
+.dok-karte--link {
+    cursor: pointer;
+}
+
+.dok-karte--link:hover {
+    background-color: var(--surface-hover);
+}
+
+.dok-badge {
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary-color) 30%, transparent);
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+    line-height: 1.5;
+    min-width: 2.8rem;
+    text-align: center;
+    letter-spacing: 0.02em;
+}
+
+.dok-beschreibung {
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    line-height: 1.35;
 }
 
 .no-courses, .loading, .error {

@@ -5,20 +5,20 @@ from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
-# Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from models import Course, CourseChunk, Lesson
+from models import Abschnitt, Dokument, DokumentChunk
 from rag_system import RAGSystem
 
 
 class TestRAGSystem:
-    """Test cases for RAGSystem end-to-end integration"""
+    """Testfälle für RAGSystem End-to-End-Integration"""
 
     def test_init_with_proper_config(self, test_config):
-        """Test RAGSystem initialization with proper configuration"""
+        """Testet RAGSystem-Initialisierung mit korrekter Konfiguration"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore"),
             patch("rag_system.AIGenerator"),
             patch("rag_system.SessionManager"),
@@ -26,9 +26,9 @@ class TestRAGSystem:
 
             rag_system = RAGSystem(test_config)
 
-            # Verify components are initialized
             assert rag_system.config == test_config
             assert rag_system.document_processor is not None
+            assert rag_system.pdf_processor is not None
             assert rag_system.vector_store is not None
             assert rag_system.ai_generator is not None
             assert rag_system.session_manager is not None
@@ -37,9 +37,10 @@ class TestRAGSystem:
             assert rag_system.outline_tool is not None
 
     def test_init_with_broken_config(self, broken_config):
-        """Test RAGSystem initialization with broken MAX_RESULTS=0 config"""
+        """Testet RAGSystem-Initialisierung mit defektem MAX_RESULTS=0"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore") as mock_vector_store,
             patch("rag_system.AIGenerator"),
             patch("rag_system.SessionManager"),
@@ -47,234 +48,212 @@ class TestRAGSystem:
 
             rag_system = RAGSystem(broken_config)
 
-            # Verify VectorStore was initialized with broken config
             mock_vector_store.assert_called_once_with(
                 broken_config.CHROMA_PATH,
                 broken_config.EMBEDDING_MODEL,
-                0,  # This is the broken MAX_RESULTS=0 value
+                0,
             )
 
     def test_query_successful_with_tool_use(self, test_config):
-        """Test successful query processing with tool usage"""
+        """Testet erfolgreiche Anfragebearbeitung mit Werkzeugnutzung"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore"),
             patch("rag_system.AIGenerator") as mock_ai_gen,
             patch("rag_system.SessionManager") as mock_session,
         ):
 
-            # Setup mocks
             mock_ai_gen.return_value.generate_response.return_value = (
-                "Based on the course content, here's the answer."
+                "Basierend auf den MaRisk-Anforderungen hier die Antwort."
             )
             mock_session.return_value.get_conversation_history.return_value = None
 
             rag_system = RAGSystem(test_config)
 
-            # Mock tool manager to return sources
             rag_system.tool_manager.get_last_sources = Mock(
-                return_value=["Course 1 - Lesson 1"]
+                return_value=["MaRisk - Abschnitt 1"]
             )
             rag_system.tool_manager.get_last_source_links = Mock(
-                return_value=["https://example.com/lesson1"]
+                return_value=["https://example.com/abschnitt1"]
             )
 
-            # Execute query
             response, sources, source_links = rag_system.query(
-                "What is covered in lesson 1?"
+                "Was sind die MaRisk-Anforderungen?"
             )
 
-            # Assert
-            assert response == "Based on the course content, here's the answer."
-            assert sources == ["Course 1 - Lesson 1"]
-            assert source_links == ["https://example.com/lesson1"]
+            assert response == "Basierend auf den MaRisk-Anforderungen hier die Antwort."
+            assert sources == ["MaRisk - Abschnitt 1"]
+            assert source_links == ["https://example.com/abschnitt1"]
 
-            # Verify AI generator was called with tools
             mock_ai_gen.return_value.generate_response.assert_called_once()
             call_args = mock_ai_gen.return_value.generate_response.call_args[1]
             assert "tools" in call_args
             assert "tool_manager" in call_args
 
     def test_query_with_session_history(self, test_config):
-        """Test query processing with conversation history"""
+        """Testet Anfragebearbeitung mit Gesprächshistorie"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore"),
             patch("rag_system.AIGenerator") as mock_ai_gen,
             patch("rag_system.SessionManager") as mock_session,
         ):
 
-            # Setup mocks
             mock_ai_gen.return_value.generate_response.return_value = (
-                "Follow-up response."
+                "Folgeantwort zur Regulierungsfrage."
             )
             mock_session.return_value.get_conversation_history.return_value = (
-                "Previous conversation"
+                "Vorheriges Gespräch"
             )
 
             rag_system = RAGSystem(test_config)
             rag_system.tool_manager.get_last_sources = Mock(return_value=[])
             rag_system.tool_manager.get_last_source_links = Mock(return_value=[])
 
-            # Execute query with session
             response, sources, source_links = rag_system.query(
-                "Follow up question", session_id="session123"
+                "Folgefrage", session_id="session123"
             )
 
-            # Assert
-            assert response == "Follow-up response."
+            assert response == "Folgeantwort zur Regulierungsfrage."
 
-            # Verify session history was used
             mock_session.return_value.get_conversation_history.assert_called_once_with(
                 "session123"
             )
             call_args = mock_ai_gen.return_value.generate_response.call_args[1]
-            assert call_args["conversation_history"] == "Previous conversation"
+            assert call_args["conversation_history"] == "Vorheriges Gespräch"
 
-            # Verify session was updated
             mock_session.return_value.add_exchange.assert_called_once_with(
                 "session123",
-                "Answer this question about course materials: Follow up question",
-                "Follow-up response.",
+                "Folgefrage",
+                "Folgeantwort zur Regulierungsfrage.",
             )
 
     def test_query_failed_scenario_max_results_zero(self, broken_config):
-        """Test the 'query failed' scenario due to MAX_RESULTS=0"""
+        """Testet das 'Anfrage fehlgeschlagen'-Szenario wegen MAX_RESULTS=0"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore") as mock_vector_store,
             patch("rag_system.AIGenerator") as mock_ai_gen,
             patch("rag_system.SessionManager"),
         ):
 
-            # Setup broken vector store that returns empty results due to MAX_RESULTS=0
             mock_vector_store_instance = Mock()
             mock_vector_store.return_value = mock_vector_store_instance
 
-            # Mock AI generator response when tools return no content
             mock_ai_gen.return_value.generate_response.return_value = (
-                "I couldn't find any relevant information."
+                "Keine relevanten Informationen gefunden."
             )
 
             rag_system = RAGSystem(broken_config)
 
-            # Mock tool manager to simulate no results found (due to MAX_RESULTS=0)
             rag_system.tool_manager.get_last_sources = Mock(return_value=[])
             rag_system.tool_manager.get_last_source_links = Mock(return_value=[])
 
-            # Execute query that should find content but doesn't due to config issue
             response, sources, source_links = rag_system.query(
-                "What is covered in the course?"
+                "Was sind die Regulierungsanforderungen?"
             )
 
-            # Assert we get an unhelpful response due to the configuration bug
-            assert "couldn't find" in response.lower() or "no" in response.lower()
+            assert "keine" in response.lower() or "gefunden" in response.lower()
             assert sources == []
             assert source_links == []
 
-            # This demonstrates the "query failed" behavior
-
     def test_query_with_no_session(self, test_config):
-        """Test query processing without session ID"""
+        """Testet Anfragebearbeitung ohne Sitzungs-ID"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore"),
             patch("rag_system.AIGenerator") as mock_ai_gen,
             patch("rag_system.SessionManager") as mock_session,
         ):
 
             mock_ai_gen.return_value.generate_response.return_value = (
-                "Response without session."
+                "Antwort ohne Sitzung."
             )
 
             rag_system = RAGSystem(test_config)
             rag_system.tool_manager.get_last_sources = Mock(return_value=[])
             rag_system.tool_manager.get_last_source_links = Mock(return_value=[])
 
-            # Execute query without session
-            response, sources, source_links = rag_system.query("What is AI?")
+            response, sources, source_links = rag_system.query("Was ist KWG?")
 
-            # Assert
-            assert response == "Response without session."
+            assert response == "Antwort ohne Sitzung."
 
-            # Verify no session operations were called
             mock_session.return_value.get_conversation_history.assert_not_called()
             mock_session.return_value.add_exchange.assert_not_called()
 
-    def test_add_course_document_success(self, test_config, sample_course):
-        """Test adding a single course document"""
+    def test_add_dokument_success(self, test_config, sample_dokument):
+        """Testet Hinzufügen eines einzelnen Regulierungsdokuments"""
         with (
             patch("rag_system.DocumentProcessor") as mock_doc_proc,
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore") as mock_vector_store,
             patch("rag_system.AIGenerator"),
             patch("rag_system.SessionManager"),
         ):
 
-            # Setup mocks
             mock_chunks = [
-                CourseChunk(
-                    content="chunk1", course_title="Test Course", chunk_index=0
+                DokumentChunk(
+                    inhalt="chunk1", dokument_titel="Test Dokument", chunk_index=0
                 ),
-                CourseChunk(
-                    content="chunk2", course_title="Test Course", chunk_index=1
+                DokumentChunk(
+                    inhalt="chunk2", dokument_titel="Test Dokument", chunk_index=1
                 ),
             ]
-            mock_doc_proc.return_value.process_course_document.return_value = (
-                sample_course,
+            mock_doc_proc.return_value.process_document.return_value = (
+                sample_dokument,
                 mock_chunks,
             )
 
             rag_system = RAGSystem(test_config)
 
-            # Execute
-            course, chunk_count = rag_system.add_course_document("/path/to/course.pdf")
+            dokument, chunk_count = rag_system.add_dokument("/pfad/zum/dokument.txt")
 
-            # Assert
-            assert course == sample_course
+            assert dokument == sample_dokument
             assert chunk_count == 2
 
-            # Verify document was processed
-            mock_doc_proc.return_value.process_course_document.assert_called_once_with(
-                "/path/to/course.pdf"
+            mock_doc_proc.return_value.process_document.assert_called_once_with(
+                "/pfad/zum/dokument.txt"
             )
 
-            # Verify data was added to vector store
-            mock_vector_store.return_value.add_course_metadata.assert_called_once_with(
-                sample_course
+            mock_vector_store.return_value.add_dokument_metadata.assert_called_once_with(
+                sample_dokument
             )
-            mock_vector_store.return_value.add_course_content.assert_called_once_with(
+            mock_vector_store.return_value.add_dokument_inhalt.assert_called_once_with(
                 mock_chunks
             )
 
-    def test_add_course_document_error(self, test_config):
-        """Test error handling when document processing fails"""
+    def test_add_dokument_error(self, test_config):
+        """Testet Fehlerbehandlung wenn Dokumentverarbeitung fehlschlägt"""
         with (
             patch("rag_system.DocumentProcessor") as mock_doc_proc,
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore"),
             patch("rag_system.AIGenerator"),
             patch("rag_system.SessionManager"),
         ):
 
-            # Setup mock to raise exception
-            mock_doc_proc.return_value.process_course_document.side_effect = Exception(
-                "Processing failed"
+            mock_doc_proc.return_value.process_document.side_effect = Exception(
+                "Verarbeitung fehlgeschlagen"
             )
 
             rag_system = RAGSystem(test_config)
 
-            # Execute
-            course, chunk_count = rag_system.add_course_document(
-                "/path/to/bad_course.pdf"
+            dokument, chunk_count = rag_system.add_dokument(
+                "/pfad/zum/defekten_dokument.txt"
             )
 
-            # Assert error handling
-            assert course is None
+            assert dokument is None
             assert chunk_count == 0
 
-    def test_add_course_folder_success(self, test_config):
-        """Test adding multiple course documents from folder"""
+    def test_add_dokument_ordner_success(self, test_config):
+        """Testet Hinzufügen mehrerer Dokumente aus einem Ordner"""
         with (
             patch("rag_system.DocumentProcessor") as mock_doc_proc,
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore") as mock_vector_store,
             patch("rag_system.AIGenerator"),
             patch("rag_system.SessionManager"),
@@ -282,52 +261,50 @@ class TestRAGSystem:
             patch("os.listdir") as mock_listdir,
         ):
 
-            # Setup mocks
             mock_exists.return_value = True
             mock_listdir.return_value = [
-                "course1.pdf",
-                "course2.txt",
-                "course3.docx",
+                "marisk.pdf",
+                "bait.txt",
+                "gwg.docx",
                 "ignore.jpg",
             ]
-            mock_vector_store.return_value.get_existing_course_titles.return_value = []
+            mock_vector_store.return_value.get_existing_dokument_titel.return_value = []
 
-            # Mock document processing
-            courses = [
-                Course(title="Course 1", lessons=[]),
-                Course(title="Course 2", lessons=[]),
-                Course(title="Course 3", lessons=[]),
+            dokumente = [
+                Dokument(titel="MaRisk", abschnitte=[]),
+                Dokument(titel="BAIT", abschnitte=[]),
+                Dokument(titel="GwG", abschnitte=[]),
             ]
             chunks = [
-                [CourseChunk(content="c1", course_title="Course 1", chunk_index=0)],
-                [CourseChunk(content="c2", course_title="Course 2", chunk_index=0)],
-                [CourseChunk(content="c3", course_title="Course 3", chunk_index=0)],
+                [DokumentChunk(inhalt="c1", dokument_titel="MaRisk", chunk_index=0)],
+                [DokumentChunk(inhalt="c2", dokument_titel="BAIT", chunk_index=0)],
+                [DokumentChunk(inhalt="c3", dokument_titel="GwG", chunk_index=0)],
             ]
 
-            mock_doc_proc.return_value.process_course_document.side_effect = [
-                (courses[0], chunks[0]),
-                (courses[1], chunks[1]),
-                (courses[2], chunks[2]),
+            mock_doc_proc.return_value.process_document.side_effect = [
+                (dokumente[1], chunks[1]),
+                (dokumente[2], chunks[2]),
             ]
+
+            mock_pdf_proc_inst = Mock()
+            mock_pdf_proc_inst.process_pdf_document.return_value = (dokumente[0], chunks[0])
 
             rag_system = RAGSystem(test_config)
+            rag_system.pdf_processor = mock_pdf_proc_inst
 
-            # Execute
-            total_courses, total_chunks = rag_system.add_course_folder(
-                "/path/to/docs", clear_existing=False
-            )
+            with patch("os.path.isfile", return_value=True):
+                gesamt_dokumente, gesamt_chunks = rag_system.add_dokument_ordner(
+                    "/pfad/zu/docs", clear_existing=False
+                )
 
-            # Assert
-            assert total_courses == 3
-            assert total_chunks == 3
+            assert gesamt_dokumente == 3
+            assert gesamt_chunks == 3
 
-            # Verify only PDF, TXT, DOCX files were processed (not JPG)
-            assert mock_doc_proc.return_value.process_course_document.call_count == 3
-
-    def test_add_course_folder_with_clear_existing(self, test_config):
-        """Test adding courses with clear_existing=True"""
+    def test_add_dokument_ordner_with_clear_existing(self, test_config):
+        """Testet Hinzufügen von Dokumenten mit clear_existing=True"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore") as mock_vector_store,
             patch("rag_system.AIGenerator"),
             patch("rag_system.SessionManager"),
@@ -340,16 +317,15 @@ class TestRAGSystem:
 
             rag_system = RAGSystem(test_config)
 
-            # Execute with clear_existing=True
-            rag_system.add_course_folder("/path/to/docs", clear_existing=True)
+            rag_system.add_dokument_ordner("/pfad/zu/docs", clear_existing=True)
 
-            # Verify data was cleared
             mock_vector_store.return_value.clear_all_data.assert_called_once()
 
-    def test_add_course_folder_skip_existing(self, test_config):
-        """Test that existing courses are skipped"""
+    def test_add_dokument_ordner_skip_existing(self, test_config):
+        """Testet ob vorhandene Dokumente übersprungen werden"""
         with (
             patch("rag_system.DocumentProcessor") as mock_doc_proc,
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore") as mock_vector_store,
             patch("rag_system.AIGenerator"),
             patch("rag_system.SessionManager"),
@@ -358,42 +334,42 @@ class TestRAGSystem:
         ):
 
             mock_exists.return_value = True
-            mock_listdir.return_value = ["course1.pdf"]
+            mock_listdir.return_value = ["marisk.txt"]
 
-            # Mock existing course titles
-            mock_vector_store.return_value.get_existing_course_titles.return_value = [
-                "Existing Course"
+            mock_vector_store.return_value.get_existing_dokument_titel.return_value = [
+                "Vorhandenes Dokument"
             ]
 
-            # Mock document processing to return existing course
-            existing_course = Course(title="Existing Course", lessons=[])
+            vorhandenes_dokument = Dokument(titel="Vorhandenes Dokument", abschnitte=[])
             mock_chunks = [
-                CourseChunk(
-                    content="content", course_title="Existing Course", chunk_index=0
+                DokumentChunk(
+                    inhalt="inhalt",
+                    dokument_titel="Vorhandenes Dokument",
+                    chunk_index=0,
                 )
             ]
-            mock_doc_proc.return_value.process_course_document.return_value = (
-                existing_course,
+            mock_doc_proc.return_value.process_document.return_value = (
+                vorhandenes_dokument,
                 mock_chunks,
             )
 
             rag_system = RAGSystem(test_config)
 
-            # Execute
-            total_courses, total_chunks = rag_system.add_course_folder("/path/to/docs")
+            gesamt_dokumente, gesamt_chunks = rag_system.add_dokument_ordner(
+                "/pfad/zu/docs"
+            )
 
-            # Assert no courses were added (because it was existing)
-            assert total_courses == 0
-            assert total_chunks == 0
+            assert gesamt_dokumente == 0
+            assert gesamt_chunks == 0
 
-            # Verify add methods were not called
-            mock_vector_store.return_value.add_course_metadata.assert_not_called()
-            mock_vector_store.return_value.add_course_content.assert_not_called()
+            mock_vector_store.return_value.add_dokument_metadata.assert_not_called()
+            mock_vector_store.return_value.add_dokument_inhalt.assert_not_called()
 
-    def test_add_course_folder_nonexistent(self, test_config):
-        """Test handling of nonexistent folder"""
+    def test_add_dokument_ordner_nonexistent(self, test_config):
+        """Testet Behandlung eines nicht vorhandenen Ordners"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore"),
             patch("rag_system.AIGenerator"),
             patch("rag_system.SessionManager"),
@@ -404,48 +380,44 @@ class TestRAGSystem:
 
             rag_system = RAGSystem(test_config)
 
-            # Execute
-            total_courses, total_chunks = rag_system.add_course_folder(
-                "/nonexistent/path"
+            gesamt_dokumente, gesamt_chunks = rag_system.add_dokument_ordner(
+                "/nicht/vorhandener/pfad"
             )
 
-            # Assert
-            assert total_courses == 0
-            assert total_chunks == 0
+            assert gesamt_dokumente == 0
+            assert gesamt_chunks == 0
 
-    def test_get_course_analytics(self, test_config):
-        """Test course analytics retrieval"""
+    def test_get_dokument_statistiken(self, test_config):
+        """Testet Abruf der Dokumentstatistiken"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore") as mock_vector_store,
             patch("rag_system.AIGenerator"),
             patch("rag_system.SessionManager"),
         ):
 
-            # Setup mocks
-            mock_vector_store.return_value.get_course_count.return_value = 5
-            mock_vector_store.return_value.get_existing_course_titles.return_value = [
-                "Course 1",
-                "Course 2",
-                "Course 3",
-                "Course 4",
-                "Course 5",
+            mock_vector_store.return_value.get_dokument_anzahl.return_value = 4
+            mock_vector_store.return_value.get_existing_dokument_titel.return_value = [
+                "MaRisk",
+                "BAIT",
+                "GwG-Hinweise",
+                "Merkblatt Finanzdienstleistungen",
             ]
 
             rag_system = RAGSystem(test_config)
 
-            # Execute
-            analytics = rag_system.get_course_analytics()
+            statistiken = rag_system.get_dokument_statistiken()
 
-            # Assert
-            assert analytics["total_courses"] == 5
-            assert len(analytics["course_titles"]) == 5
-            assert "Course 1" in analytics["course_titles"]
+            assert statistiken["gesamt_dokumente"] == 4
+            assert len(statistiken["dokument_titel"]) == 4
+            assert "MaRisk" in statistiken["dokument_titel"]
 
     def test_tool_registration(self, test_config):
-        """Test that tools are properly registered with tool manager"""
+        """Testet ob Werkzeuge korrekt beim Werkzeugmanager registriert werden"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore"),
             patch("rag_system.AIGenerator"),
             patch("rag_system.SessionManager"),
@@ -453,82 +425,75 @@ class TestRAGSystem:
 
             rag_system = RAGSystem(test_config)
 
-            # Verify tools are registered
             tool_definitions = rag_system.tool_manager.get_tool_definitions()
             tool_names = [tool["name"] for tool in tool_definitions]
 
-            assert "search_course_content" in tool_names
-            assert "get_course_outline" in tool_names
+            assert "regulierungsdokument_suchen" in tool_names
+            assert "dokument_struktur_abrufen" in tool_names
 
     def test_source_tracking_and_reset(self, test_config):
-        """Test that sources are properly tracked and reset after queries"""
+        """Testet ob Quellen korrekt verfolgt und nach Anfragen zurückgesetzt werden"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore"),
             patch("rag_system.AIGenerator") as mock_ai_gen,
             patch("rag_system.SessionManager"),
         ):
 
-            mock_ai_gen.return_value.generate_response.return_value = "Test response"
+            mock_ai_gen.return_value.generate_response.return_value = "Testantwort"
 
             rag_system = RAGSystem(test_config)
 
-            # Mock tool manager methods
-            rag_system.tool_manager.get_last_sources = Mock(return_value=["Source 1"])
+            rag_system.tool_manager.get_last_sources = Mock(return_value=["Quelle 1"])
             rag_system.tool_manager.get_last_source_links = Mock(
                 return_value=["Link 1"]
             )
             rag_system.tool_manager.reset_sources = Mock()
 
-            # Execute query
-            response, sources, source_links = rag_system.query("Test query")
+            response, sources, source_links = rag_system.query("Testanfrage")
 
-            # Assert sources were retrieved
-            assert sources == ["Source 1"]
+            assert sources == ["Quelle 1"]
             assert source_links == ["Link 1"]
 
-            # Verify sources were reset after retrieval
             rag_system.tool_manager.reset_sources.assert_called_once()
 
     def test_end_to_end_query_flow_integration(self, test_config):
-        """Test complete end-to-end query processing flow"""
+        """Testet vollständigen End-to-End-Anfrage-Verarbeitungsfluss"""
         with (
             patch("rag_system.DocumentProcessor"),
+            patch("rag_system.PDFDocumentProcessor"),
             patch("rag_system.VectorStore"),
             patch("rag_system.AIGenerator") as mock_ai_gen,
             patch("rag_system.SessionManager") as mock_session,
         ):
 
-            # Setup comprehensive mocks
-            mock_session.return_value.create_session.return_value = "new_session_123"
+            mock_session.return_value.create_session.return_value = "neue_session_123"
             mock_session.return_value.get_conversation_history.return_value = None
             mock_ai_gen.return_value.generate_response.return_value = (
-                "Comprehensive answer based on course materials."
+                "Umfassende Antwort basierend auf den Regulierungsdokumenten."
             )
 
             rag_system = RAGSystem(test_config)
             rag_system.tool_manager.get_last_sources = Mock(
-                return_value=["Complete Course - Lesson 5"]
+                return_value=["MaRisk - Abschnitt 4"]
             )
             rag_system.tool_manager.get_last_source_links = Mock(
-                return_value=["https://example.com/lesson5"]
+                return_value=["https://example.com/abschnitt4"]
             )
 
-            # Execute complete flow
             response, sources, source_links = rag_system.query(
-                "Explain the complete concept from lesson 5"
+                "Erläutern Sie die MaRisk AT 4 Anforderungen vollständig"
             )
 
-            # Assert complete response
-            assert "Comprehensive answer" in response
-            assert sources == ["Complete Course - Lesson 5"]
-            assert source_links == ["https://example.com/lesson5"]
+            assert "Umfassende Antwort" in response
+            assert sources == ["MaRisk - Abschnitt 4"]
+            assert source_links == ["https://example.com/abschnitt4"]
 
-            # Verify AI was called with proper parameters
             call_args = mock_ai_gen.return_value.generate_response.call_args[1]
             assert (
                 call_args["query"]
-                == "Answer this question about course materials: Explain the complete concept from lesson 5"
+                == "Beantworten Sie diese Frage zu deutschen Regulierungsdokumenten: Erläutern Sie die MaRisk AT 4 Anforderungen vollständig"
             )
             assert "tools" in call_args
             assert "tool_manager" in call_args

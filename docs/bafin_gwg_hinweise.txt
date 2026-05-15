@@ -1,0 +1,95 @@
+Dokument-Titel: BaFin Auslegungs- und Anwendungshinweise zum Geldwäschegesetz (GwG)
+Dokument-Quelle: https://www.bafin.de/DE/Aufsicht/BankenFinanzdienstleister/Bekaempfung_Geldwaesche/bek_geldwaesche_node.html
+Herausgeber: BaFin - Bundesanstalt für Finanzdienstleistungsaufsicht
+
+Abschnitt 1: Überblick - Geldwäschegesetz und Anwendungsbereich
+Das Gesetz über das Aufspüren von Gewinnen aus schweren Straftaten (Geldwäschegesetz - GwG) dient der Verhinderung von Geldwäsche und Terrorismusfinanzierung. Es setzt die EU-Richtlinien zur Bekämpfung von Geldwäsche und Terrorismusfinanzierung in deutsches Recht um.
+
+Verpflichtete im Sinne des § 2 GwG sind insbesondere: Kreditinstitute, Finanzdienstleistungsinstitute, Zahlungsinstitute, Versicherungsunternehmen, Kapitalverwaltungsgesellschaften sowie Rechtsanwälte, Notare, Wirtschaftsprüfer und Steuerberater in bestimmten Bereichen.
+
+Die BaFin ist für die Aufsicht über die ihr unterstellten Verpflichteten zuständig und erlässt Auslegungs- und Anwendungshinweise (AuA) zur Konkretisierung der gesetzlichen Anforderungen.
+
+Abschnitt-Quelle: https://www.bafin.de/DE/Aufsicht/BankenFinanzdienstleister/Bekaempfung_Geldwaesche/bek_geldwaesche_node.html
+
+Abschnitt 2: Risikobasierter Ansatz und Risikoanalyse (§§ 4-9 GwG)
+Risikobasierter Ansatz (§ 4 GwG): Die Verpflichteten haben zur Verhinderung von Geldwäsche und Terrorismusfinanzierung Maßnahmen zu ergreifen, die dem jeweiligen Risiko angemessen sind. Dabei können Art und Umfang der Maßnahmen an das jeweils bestehende Risiko angepasst werden (risikobasierter Ansatz).
+
+Risikoanalyse (§ 5 GwG): Die Verpflichteten haben eine institutsspezifische Risikoanalyse zu erstellen und zu dokumentieren. Die Risikoanalyse muss alle wesentlichen Risikofelder abdecken, insbesondere: Kundenrisiken, Produktrisiken, Transaktionsrisiken und geographische Risiken. Die Risikoanalyse ist regelmäßig, mindestens jährlich, zu überprüfen und bei Bedarf anzupassen.
+
+Faktoren, die ein erhöhtes Risiko begründen können (Anlage 1 GwG): Anonyme Transaktionen, Kunden aus Hochrisikoländern, Transaktionen ohne erkennbaren wirtschaftlichen Zweck, Barbargeld-intensive Geschäfte, komplexe ungewöhnliche Transaktionsstrukturen.
+
+Abschnitt-Quelle: https://www.bafin.de/DE/Aufsicht/BankenFinanzdienstleister/Bekaempfung_Geldwaesche/bek_geldwaesche_node.html
+
+Abschnitt 3: Allgemeine Sorgfaltspflichten (§§ 10-13 GwG)
+Die allgemeinen Sorgfaltspflichten nach § 10 GwG umfassen:
+
+1. Identifizierung des Vertragspartners: Der Verpflichtete hat den Vertragspartner (natürliche oder juristische Person) zu identifizieren und die Angaben zu verifizieren. Bei natürlichen Personen sind Vorname, Nachname, Geburtsort, Geburtsdatum, Staatsangehörigkeit und Wohnanschrift zu erheben und durch ein amtliches Ausweisdokument zu verifizieren.
+
+2. Identifizierung des wirtschaftlich Berechtigten (§ 11 GwG): Der Verpflichtete hat zu klären, ob für den Vertragspartner ein wirtschaftlich Berechtigter handelt und diesen zu identifizieren. Wirtschaftlich Berechtigter ist grundsätzlich jede natürliche Person, die mehr als 25 Prozent der Kapitalanteile oder Stimmrechte kontrolliert oder auf vergleichbare Weise Kontrolle ausübt.
+
+3. Klärung des Zwecks der Geschäftsbeziehung: Der Verpflichtete hat den Zweck und die angestrebte Art der Geschäftsbeziehung zu erheben.
+
+4. Kontinuierliche Überwachung der Geschäftsbeziehung: Die Geschäftsbeziehung und die dabei getätigten Transaktionen sind kontinuierlich zu überwachen. Vorliegende Informationen sind in angemessenen Abständen zu aktualisieren.
+
+5. Abklärung des PEP-Status: Der Verpflichtete hat zu klären, ob der Vertragspartner oder der wirtschaftlich Berechtigte eine politisch exponierte Person (PEP) ist, ein Familienmitglied einer PEP oder eine einer PEP bekanntermaßen nahestehende Person.
+
+Zeitpunkt der Identifizierung: Die Sorgfaltspflichten sind grundsätzlich vor Begründung einer Geschäftsbeziehung oder vor Durchführung einer Transaktion zu erfüllen. Bei unverzüglicher Ermittlung des wirtschaftlich Berechtigten sind Ausnahmen möglich.
+
+Abschnitt-Quelle: https://www.bafin.de/DE/Aufsicht/BankenFinanzdienstleister/Bekaempfung_Geldwaesche/bek_geldwaesche_node.html
+
+Abschnitt 4: Vereinfachte Sorgfaltspflichten (§ 14 GwG)
+Vereinfachte Sorgfaltspflichten können angewendet werden, wenn ein geringes Risiko der Geldwäsche oder Terrorismusfinanzierung besteht. Das geringere Risiko muss auf Basis der Risikoanalyse belegt sein. Ein geringes Risiko kann insbesondere vorliegen bei: Kreditinstituten und anderen Verpflichteten aus EU-Mitgliedstaaten, börsennotierten Unternehmen, öffentlichen Behörden und staatlichen Stellen sowie Lebensversicherungsverträgen mit geringer Prämie.
+
+Im Rahmen vereinfachter Sorgfaltspflichten können Art, Umfang und Häufigkeit der Maßnahmen reduziert werden. Eine vollständige Aufgabe der Sorgfaltspflichten ist jedoch nicht möglich. Die Entscheidung zur Anwendung vereinfachter Sorgfaltspflichten ist zu dokumentieren und zu begründen.
+
+Abschnitt-Quelle: https://www.bafin.de/DE/Aufsicht/BankenFinanzdienstleister/Bekaempfung_Geldwaesche/bek_geldwaesche_node.html
+
+Abschnitt 5: Verstärkte Sorgfaltspflichten (§§ 15-17 GwG)
+Verstärkte Sorgfaltspflichten (§ 15 GwG) sind anzuwenden bei erhöhtem Risiko der Geldwäsche oder Terrorismusfinanzierung. Fälle, in denen verstärkte Sorgfaltspflichten zwingend anzuwenden sind:
+
+1. Hochrisikoländer: Geschäftsbeziehungen und Transaktionen mit Bezug zu Drittstaaten, die die FATF (Financial Action Task Force) als Hochrisikostaat oder nicht kooperativen Staat eingestuft hat. Einzuholen ist eine Genehmigung der Geschäftsleitung sowie verstärkte Überwachung der Transaktion.
+
+2. Politisch exponierte Personen (PEP) nach § 1 Abs. 12 GwG: Personen, die wichtige öffentliche Ämter ausüben oder ausgeübt haben. Dazu gehören Staatschefs, Regierungsmitglieder, Parlamentarier, Richter oberster Gerichte, Führungskräfte staatlicher Unternehmen und hohe Militärangehörige. Maßnahmen: Genehmigung der Geschäftsleitung für die Begründung oder Fortführung der Geschäftsbeziehung, Ermittlung von Herkunft des Vermögens und der Mittel, verstärkte laufende Überwachung.
+
+3. Korrespondenzbankenbeziehungen mit Banken aus Drittstaaten: Bewertung des Reputationsstatus, Beurteilung der AML/CFT-Aufsicht des anderen Landes, Genehmigung der Geschäftsleitung, schriftliche Vereinbarung über Verantwortlichkeiten, kein Briefkastenbanken-Geschäft.
+
+4. Ungewöhnliche Transaktionsstrukturen ohne ersichtlichen wirtschaftlichen Zweck.
+
+Abschnitt-Quelle: https://www.bafin.de/DE/Aufsicht/BankenFinanzdienstleister/Bekaempfung_Geldwaesche/bek_geldwaesche_node.html
+
+Abschnitt 6: Geldwäscheverdachtsmeldungen (§§ 43-46 GwG)
+Meldepflicht nach § 43 GwG: Der Verpflichtete hat unverzüglich eine Verdachtsmeldung bei der Zentralstelle für Finanztransaktionsuntersuchungen (Financial Intelligence Unit - FIU) zu erstatten, wenn er weiß, vermutet oder Grund zu der Annahme hat, dass eine Transaktion oder Vermögenswerte im Zusammenhang mit Geldwäsche oder Terrorismusfinanzierung stehen.
+
+Auslöser für eine Verdachtsmeldung können sein: Transaktionen ohne erkennbaren wirtschaftlichen Zweck, Transaktionen, die nicht zum Kundenprofil passen, Transaktionen in Verbindung mit bekannten kriminellen Tätigkeiten, Informationen aus Medien oder Behörden über eine Person.
+
+Verfahren: Verdachtsmeldungen sind über das Online-Portal der FIU (goAML) zu erstatten. Nach Erstattung einer Meldung darf die Transaktion zunächst nicht durchgeführt werden (Transaktionsverbot). Nach drei Werktagen ohne Reaktion der FIU kann die Transaktion durchgeführt werden, sofern kein Einfrieren des Vermögens angeordnet wurde.
+
+Tipping-off-Verbot (§ 47 GwG): Es ist verboten, den Vertragspartner oder Dritte über eine erstattete Verdachtsmeldung zu informieren.
+
+Dokumentation: Erstattete Verdachtsmeldungen und die zugrunde liegenden Feststellungen sind für fünf Jahre aufzubewahren.
+
+Abschnitt-Quelle: https://www.bafin.de/DE/Aufsicht/BankenFinanzdienstleister/Bekaempfung_Geldwaesche/bek_geldwaesche_node.html
+
+Abschnitt 7: Interne Sicherungsmaßnahmen (§ 6 GwG)
+Gemäß § 6 GwG haben Verpflichtete interne Sicherungsmaßnahmen einzurichten. Diese umfassen:
+
+Geldwäschebeauftragter: Institute müssen einen Geldwäschebeauftragten und einen Stellvertreter benennen. Der Geldwäschebeauftragte muss auf Führungsebene angesiedelt sein, direkte Berichtslinie zur Geschäftsleitung haben und muss ausreichend qualifiziert, unabhängig und mit ausreichenden Ressourcen ausgestattet sein.
+
+Mitarbeiterschulungen: Mitarbeiter sind regelmäßig über Methoden der Geldwäsche und Terrorismusfinanzierung, aktuelle Typologien und interne Sicherungsmaßnahmen zu schulen. Schulungen sind zu dokumentieren.
+
+Zuverlässigkeitsprüfung von Mitarbeitern: Bei der Einstellung von Mitarbeitern ist deren Zuverlässigkeit durch geeignete Maßnahmen sicherzustellen. Mitarbeiter in sensiblen Bereichen sind regelmäßig zu überprüfen.
+
+Unabhängige Prüfung: Die internen Sicherungsmaßnahmen sind regelmäßig durch die Interne Revision oder externe Prüfer zu überprüfen. Die Ergebnisse sind der Geschäftsleitung zu berichten.
+
+Whistleblowing-System: Mitarbeiter und Dritte müssen die Möglichkeit haben, Verstöße gegen GwG-Anforderungen zu melden. Die Identität der Hinweisgeber ist zu schützen.
+
+Abschnitt-Quelle: https://www.bafin.de/DE/Aufsicht/BankenFinanzdienstleister/Bekaempfung_Geldwaesche/bek_geldwaesche_node.html
+
+Abschnitt 8: Aufzeichnungs- und Aufbewahrungspflichten (§§ 8-9 GwG)
+Aufzeichnungspflicht (§ 8 GwG): Verpflichtete haben über alle Transaktionen, die im Rahmen einer Geschäftsbeziehung durchgeführt werden oder bei denen Sorgfaltspflichten angewendet werden, Aufzeichnungen zu erstellen. Die Aufzeichnungen müssen die vollständige Rekonstruktion der Transaktion ermöglichen.
+
+Aufzuzeichnen sind insbesondere: Identifikationsdaten des Vertragspartners, Transaktionsdaten (Betrag, Währung, Datum, Herkunft, Ziel), Ergebnisse der Risikoanalyse sowie Ergebnisse der Überprüfung wirtschaftlich Berechtigter.
+
+Aufbewahrungspflicht (§ 8 Abs. 4 GwG): Aufzeichnungen sind fünf Jahre nach Ende der Geschäftsbeziehung oder nach Durchführung der Transaktion aufzubewahren. Werden Aufzeichnungen auf einem Datenträger gespeichert, ist sicherzustellen, dass sie jederzeit reproduziert werden können.
+
+Abschnitt-Quelle: https://www.bafin.de/DE/Aufsicht/BankenFinanzdienstleister/Bekaempfung_Geldwaesche/bek_geldwaesche_node.html

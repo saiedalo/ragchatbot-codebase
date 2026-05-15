@@ -4,283 +4,231 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-# Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from search_tools import CourseSearchTool
+from search_tools import ReguliierungssuchTool
 from vector_store import SearchResults
 
 
-class TestCourseSearchTool:
-    """Test cases for CourseSearchTool"""
+class TestReguliierungssuchTool:
+    """Testfälle für ReguliierungssuchTool"""
 
     def test_execute_successful_search(self, mock_vector_store, sample_search_results):
-        """Test successful search with results"""
-        # Setup
+        """Testet erfolgreiche Suche mit Ergebnissen"""
         mock_vector_store.search.return_value = sample_search_results
-        tool = CourseSearchTool(mock_vector_store)
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
-        result = tool.execute("test query")
+        result = tool.execute("Testanfrage")
 
-        # Assert
-        assert "[Building Towards Computer Use with Anthropic - Lesson 1]" in result
-        assert "[Building Towards Computer Use with Anthropic - Lesson 2]" in result
-        assert "Welcome to Building Toward Computer Use" in result
-        assert "advanced topics including tool calling" in result
+        assert "[MaRisk - Mindestanforderungen an das Risikomanagement - Abschnitt 1]" in result
+        assert "[MaRisk - Mindestanforderungen an das Risikomanagement - Abschnitt 2]" in result
+        assert "Willkommen zu den MaRisk" in result
+        assert "Anforderungen an die Risikosteuerung" in result
 
-        # Verify vector store was called correctly
         mock_vector_store.search.assert_called_once_with(
-            query="test query", course_name=None, lesson_number=None
+            query="Testanfrage", dokument_name=None, abschnitt_nummer=None
         )
 
-    def test_execute_with_course_filter(self, mock_vector_store, sample_search_results):
-        """Test search with course name filter"""
-        # Setup
+    def test_execute_with_document_filter(self, mock_vector_store, sample_search_results):
+        """Testet Suche mit Dokumentname-Filter"""
         mock_vector_store.search.return_value = sample_search_results
-        tool = CourseSearchTool(mock_vector_store)
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
-        result = tool.execute("test query", course_name="Anthropic Course")
+        result = tool.execute("Testanfrage", dokument_name="MaRisk")
 
-        # Assert
-        assert "Building Towards Computer Use" in result
+        assert "MaRisk" in result
         mock_vector_store.search.assert_called_once_with(
-            query="test query", course_name="Anthropic Course", lesson_number=None
+            query="Testanfrage", dokument_name="MaRisk", abschnitt_nummer=None
         )
 
-    def test_execute_with_lesson_filter(self, mock_vector_store, sample_search_results):
-        """Test search with lesson number filter"""
-        # Setup
+    def test_execute_with_section_filter(self, mock_vector_store, sample_search_results):
+        """Testet Suche mit Abschnittsnummer-Filter"""
         mock_vector_store.search.return_value = sample_search_results
-        tool = CourseSearchTool(mock_vector_store)
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
-        result = tool.execute("test query", lesson_number=2)
+        result = tool.execute("Testanfrage", abschnitt_nummer=2)
 
-        # Assert
-        assert "Building Towards Computer Use" in result
+        assert "MaRisk" in result
         mock_vector_store.search.assert_called_once_with(
-            query="test query", course_name=None, lesson_number=2
+            query="Testanfrage", dokument_name=None, abschnitt_nummer=2
         )
 
     def test_execute_with_both_filters(self, mock_vector_store, sample_search_results):
-        """Test search with both course and lesson filters"""
-        # Setup
+        """Testet Suche mit beiden Filtern"""
         mock_vector_store.search.return_value = sample_search_results
-        tool = CourseSearchTool(mock_vector_store)
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
         result = tool.execute(
-            "test query", course_name="Anthropic Course", lesson_number=1
+            "Testanfrage", dokument_name="MaRisk", abschnitt_nummer=1
         )
 
-        # Assert
-        assert "Building Towards Computer Use" in result
+        assert "MaRisk" in result
         mock_vector_store.search.assert_called_once_with(
-            query="test query", course_name="Anthropic Course", lesson_number=1
+            query="Testanfrage", dokument_name="MaRisk", abschnitt_nummer=1
         )
 
     def test_execute_empty_results(self, mock_vector_store, empty_search_results):
-        """Test handling of empty search results"""
-        # Setup
+        """Testet die Behandlung leerer Suchergebnisse"""
         mock_vector_store.search.return_value = empty_search_results
-        tool = CourseSearchTool(mock_vector_store)
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
-        result = tool.execute("nonexistent query")
+        result = tool.execute("nicht existierende Anfrage")
 
-        # Assert
-        assert result == "No relevant content found."
+        assert result == "Keine relevanten Inhalte gefunden."
 
     def test_execute_empty_results_with_filters(
         self, mock_vector_store, empty_search_results
     ):
-        """Test empty results with filter information"""
-        # Setup
+        """Testet leere Ergebnisse mit Filterinformationen"""
         mock_vector_store.search.return_value = empty_search_results
-        tool = CourseSearchTool(mock_vector_store)
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
         result = tool.execute(
-            "test query", course_name="Missing Course", lesson_number=5
+            "Testanfrage", dokument_name="Nicht vorhandenes Dokument", abschnitt_nummer=5
         )
 
-        # Assert
-        expected = "No relevant content found in course 'Missing Course' in lesson 5."
+        expected = "Keine relevanten Inhalte gefunden in Dokument 'Nicht vorhandenes Dokument' in Abschnitt 5."
         assert result == expected
 
     def test_execute_search_error(self, mock_vector_store, error_search_results):
-        """Test handling of search errors"""
-        # Setup
+        """Testet die Behandlung von Suchfehlern"""
         mock_vector_store.search.return_value = error_search_results
-        tool = CourseSearchTool(mock_vector_store)
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
-        result = tool.execute("test query")
+        result = tool.execute("Testanfrage")
 
-        # Assert
-        assert result == "Search error: Database connection failed"
+        assert result == "Suchfehler: Datenbankverbindung fehlgeschlagen"
 
     def test_execute_max_results_zero_issue(self, mock_vector_store):
-        """Test the critical MAX_RESULTS=0 issue"""
-        # Setup - simulate the behavior when MAX_RESULTS=0 causes no results
+        """Testet das kritische MAX_RESULTS=0 Problem"""
         empty_results = SearchResults(documents=[], metadata=[], distances=[])
         mock_vector_store.search.return_value = empty_results
-        tool = CourseSearchTool(mock_vector_store)
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
-        result = tool.execute("valid query about course content")
+        result = tool.execute("gültige Anfrage zu Regulierungsinhalten")
 
-        # Assert - this should return no content found due to MAX_RESULTS=0
-        assert result == "No relevant content found."
+        assert result == "Keine relevanten Inhalte gefunden."
 
-        # This test demonstrates the bug: even with valid queries, we get no results
-        # when MAX_RESULTS=0 because the vector store returns empty results
-
-    def test_format_results_with_lesson_links(self, mock_vector_store):
-        """Test that lesson links are properly retrieved and stored"""
-        # Setup
+    def test_format_results_with_section_links(self, mock_vector_store):
+        """Testet ob Abschnittslinks korrekt abgerufen und gespeichert werden"""
         search_results = SearchResults(
-            documents=["Test content"],
+            documents=["Testinhalt"],
             metadata=[
-                {"course_title": "Test Course", "lesson_number": 1, "chunk_index": 0}
+                {"dokument_titel": "Test Dokument", "abschnitt_nummer": 1, "chunk_index": 0}
             ],
             distances=[0.1],
         )
         mock_vector_store.search.return_value = search_results
-        mock_vector_store.get_lesson_link.return_value = "https://example.com/lesson1"
+        mock_vector_store.get_abschnitt_quelle.return_value = "https://example.com/abschnitt1"
 
-        tool = CourseSearchTool(mock_vector_store)
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
-        result = tool.execute("test query")
+        result = tool.execute("Testanfrage")
 
-        # Assert
-        assert "[Test Course - Lesson 1]" in result
-        assert "Test content" in result
+        assert "[Test Dokument - Abschnitt 1]" in result
+        assert "Testinhalt" in result
 
-        # Verify lesson link was requested
-        mock_vector_store.get_lesson_link.assert_called_once_with("Test Course", 1)
+        mock_vector_store.get_abschnitt_quelle.assert_called_once_with("Test Dokument", 1)
 
-        # Check that sources and links are tracked
-        assert tool.last_sources == ["Test Course - Lesson 1"]
-        assert tool.last_source_links == ["https://example.com/lesson1"]
+        assert tool.last_sources == ["Test Dokument - Abschnitt 1"]
+        assert tool.last_source_links == ["https://example.com/abschnitt1"]
 
-    def test_format_results_without_lesson_number(self, mock_vector_store):
-        """Test formatting when lesson_number is None"""
-        # Setup
+    def test_format_results_without_section_number(self, mock_vector_store):
+        """Testet Formatierung wenn abschnitt_nummer None ist"""
         search_results = SearchResults(
-            documents=["Test content"],
-            metadata=[
-                {"course_title": "Test Course", "chunk_index": 0}
-            ],  # No lesson_number
+            documents=["Testinhalt"],
+            metadata=[{"dokument_titel": "Test Dokument", "chunk_index": 0}],
             distances=[0.1],
         )
         mock_vector_store.search.return_value = search_results
 
-        tool = CourseSearchTool(mock_vector_store)
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
-        result = tool.execute("test query")
+        result = tool.execute("Testanfrage")
 
-        # Assert - should not include lesson number in header
-        assert "[Test Course]" in result
-        assert "Test content" in result
+        assert "[Test Dokument]" in result
+        assert "Testinhalt" in result
 
-        # Check sources tracking
-        assert tool.last_sources == ["Test Course"]
+        assert tool.last_sources == ["Test Dokument"]
         assert tool.last_source_links == [None]
 
     def test_get_tool_definition(self, mock_vector_store):
-        """Test that tool definition is properly structured"""
-        # Setup
-        tool = CourseSearchTool(mock_vector_store)
+        """Testet ob die Werkzeugdefinition korrekt strukturiert ist"""
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
         definition = tool.get_tool_definition()
 
-        # Assert
-        assert definition["name"] == "search_course_content"
+        assert definition["name"] == "regulierungsdokument_suchen"
         assert "description" in definition
         assert "input_schema" in definition
 
         schema = definition["input_schema"]
         assert schema["type"] == "object"
-        assert "query" in schema["properties"]
-        assert "course_name" in schema["properties"]
-        assert "lesson_number" in schema["properties"]
-        assert schema["required"] == ["query"]
+        assert "suchanfrage" in schema["properties"]
+        assert "dokument_name" in schema["properties"]
+        assert "abschnitt_nummer" in schema["properties"]
+        assert schema["required"] == ["suchanfrage"]
 
     def test_source_tracking_reset(self, mock_vector_store, sample_search_results):
-        """Test that sources are properly tracked and can be reset"""
-        # Setup
-        tool = CourseSearchTool(mock_vector_store)
+        """Testet ob Quellen korrekt verfolgt und zurückgesetzt werden"""
+        tool = ReguliierungssuchTool(mock_vector_store)
         mock_vector_store.search.return_value = sample_search_results
 
-        # Execute first search
-        tool.execute("first query")
+        tool.execute("erste Anfrage")
         first_sources = tool.last_sources.copy()
         first_links = tool.last_source_links.copy()
 
-        # Verify sources are tracked
         assert len(first_sources) > 0
         assert len(first_links) > 0
 
-        # Execute second search with empty results
         mock_vector_store.search.return_value = SearchResults([], [], [])
-        tool.execute("second query")
+        tool.execute("zweite Anfrage")
 
-        # Verify sources are cleared for empty results
         assert tool.last_sources == []
         assert tool.last_source_links == []
 
     def test_multiple_documents_formatting(self, mock_vector_store):
-        """Test formatting when multiple documents are returned"""
-        # Setup
+        """Testet Formatierung wenn mehrere Dokumente zurückgegeben werden"""
         multi_results = SearchResults(
             documents=[
-                "First document content about AI",
-                "Second document about machine learning",
-                "Third document about computer vision",
+                "Erster Dokumentinhalt zu Risikomanagement",
+                "Zweiter Dokumentinhalt zu IT-Sicherheit",
+                "Dritter Dokumentinhalt zu Geldwäsche",
             ],
             metadata=[
-                {"course_title": "AI Course", "lesson_number": 1, "chunk_index": 0},
-                {"course_title": "AI Course", "lesson_number": 2, "chunk_index": 1},
-                {"course_title": "ML Course", "lesson_number": 1, "chunk_index": 0},
+                {"dokument_titel": "MaRisk", "abschnitt_nummer": 1, "chunk_index": 0},
+                {"dokument_titel": "BAIT", "abschnitt_nummer": 2, "chunk_index": 1},
+                {"dokument_titel": "GwG-Hinweise", "abschnitt_nummer": 1, "chunk_index": 0},
             ],
             distances=[0.1, 0.2, 0.3],
         )
         mock_vector_store.search.return_value = multi_results
-        mock_vector_store.get_lesson_link.side_effect = [
-            "https://example.com/ai1",
-            "https://example.com/ai2",
-            "https://example.com/ml1",
+        mock_vector_store.get_abschnitt_quelle.side_effect = [
+            "https://example.com/marisk1",
+            "https://example.com/bait2",
+            "https://example.com/gwg1",
         ]
 
-        tool = CourseSearchTool(mock_vector_store)
+        tool = ReguliierungssuchTool(mock_vector_store)
 
-        # Execute
-        result = tool.execute("test query")
+        result = tool.execute("Testanfrage")
 
-        # Assert all documents are included
-        assert "[AI Course - Lesson 1]" in result
-        assert "[AI Course - Lesson 2]" in result
-        assert "[ML Course - Lesson 1]" in result
-        assert "First document content about AI" in result
-        assert "Second document about machine learning" in result
-        assert "Third document about computer vision" in result
+        assert "[MaRisk - Abschnitt 1]" in result
+        assert "[BAIT - Abschnitt 2]" in result
+        assert "[GwG-Hinweise - Abschnitt 1]" in result
+        assert "Erster Dokumentinhalt zu Risikomanagement" in result
+        assert "Zweiter Dokumentinhalt zu IT-Sicherheit" in result
+        assert "Dritter Dokumentinhalt zu Geldwäsche" in result
 
-        # Verify all sources are tracked
         expected_sources = [
-            "AI Course - Lesson 1",
-            "AI Course - Lesson 2",
-            "ML Course - Lesson 1",
+            "MaRisk - Abschnitt 1",
+            "BAIT - Abschnitt 2",
+            "GwG-Hinweise - Abschnitt 1",
         ]
         expected_links = [
-            "https://example.com/ai1",
-            "https://example.com/ai2",
-            "https://example.com/ml1",
+            "https://example.com/marisk1",
+            "https://example.com/bait2",
+            "https://example.com/gwg1",
         ]
 
         assert tool.last_sources == expected_sources

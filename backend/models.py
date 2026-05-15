@@ -3,27 +3,27 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel
 
 
-class Lesson(BaseModel):
-    """Represents a lesson within a course"""
+class Abschnitt(BaseModel):
+    """Repräsentiert einen Abschnitt innerhalb eines Regulierungsdokuments"""
 
-    lesson_number: int  # Sequential lesson number (1, 2, 3, etc.)
-    title: str  # Lesson title
-    lesson_link: Optional[str] = None  # URL link to the lesson
-
-
-class Course(BaseModel):
-    """Represents a complete course with its lessons"""
-
-    title: str  # Full course title (used as unique identifier)
-    course_link: Optional[str] = None  # URL link to the course
-    instructor: Optional[str] = None  # Course instructor name (optional metadata)
-    lessons: List[Lesson] = []  # List of lessons in this course
+    abschnitt_nummer: int
+    titel: str
+    abschnitt_quelle: Optional[str] = None
 
 
-class CourseChunk(BaseModel):
-    """Represents a text chunk from a course for vector storage"""
+class Dokument(BaseModel):
+    """Repräsentiert ein vollständiges Regulierungsdokument mit seinen Abschnitten"""
 
-    content: str  # The actual text content
-    course_title: str  # Which course this chunk belongs to
-    lesson_number: Optional[int] = None  # Which lesson this chunk is from
-    chunk_index: int  # Position of this chunk in the document
+    titel: str
+    dokument_quelle: Optional[str] = None
+    herausgeber: Optional[str] = None
+    abschnitte: List[Abschnitt] = []
+
+
+class DokumentChunk(BaseModel):
+    """Repräsentiert einen Text-Chunk aus einem Dokument für die Vektorspeicherung"""
+
+    inhalt: str
+    dokument_titel: str
+    abschnitt_nummer: Optional[int] = None
+    chunk_index: int
