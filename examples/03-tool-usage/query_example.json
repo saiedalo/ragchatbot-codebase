@@ -1,0 +1,9 @@
+{
+  "query": "What specific controls must we implement for customer data protection under German banking law?",
+  "session_id": null,
+  "note": "This query benefits from tool-calling - Claude will search for specific controls, then refine",
+  "expected_tools": [
+    "ReguliierungssuchTool (first search for data protection controls)",
+    "ReguliierungssuchTool (second search to refine with German-specific requirements)"
+  ]
+}

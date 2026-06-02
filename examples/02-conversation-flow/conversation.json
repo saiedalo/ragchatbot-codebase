@@ -1,0 +1,22 @@
+{
+  "conversation": [
+    {
+      "turn": 1,
+      "user": "What are the key requirements for data backup and recovery?",
+      "session_id": "sess_conversation_demo_001"
+    },
+    {
+      "turn": 2,
+      "user": "How frequently should these backups be tested?",
+      "session_id": "sess_conversation_demo_001",
+      "context": "Follow-up question - system should maintain context from Turn 1"
+    },
+    {
+      "turn": 3,
+      "user": "What about recovery time objectives?",
+      "session_id": "sess_conversation_demo_001",
+      "context": "Third turn - builds on previous context"
+    }
+  ],
+  "note": "This demonstrates 3-turn conversation with session memory"
+}
