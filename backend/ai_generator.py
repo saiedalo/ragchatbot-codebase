@@ -44,7 +44,7 @@ Geben Sie nur die direkte Antwort auf die gestellte Frage.
         self.model = model
 
         # Pre-build base API parameters
-        self.base_params = {"model": self.model, "temperature": 0, "max_tokens": 1200}
+        self.base_params = {"model": self.model, "temperature": 0.7, "max_tokens": 1200}
 
     def generate_response(
         self,

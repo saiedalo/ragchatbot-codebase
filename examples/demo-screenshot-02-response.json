@@ -1,0 +1,15 @@
+{
+  "query": "Was sind die wichtigsten IT-Sicherheitsanforderungen nach BAIT?",
+  "answer": "Die Bankaufsichtlichen Anforderungen an die IT (BAIT) definieren umfassende IT-Sicherheitsanforderungen. Die wichtigsten sind:\n\n**1. Zugriffskontrolle & Authentifizierung:**\n- Multi-Faktor-Authentifizierung (MFA) für alle privilegierten Zugriffe\n- Starke Passwortrichtlinien (Mindestlänge 12 Zeichen, Komplexität)\n- Rollenbasierte Zugriffskontrolle (RBAC)\n- Regelmäßige Überprüfung und Revozierung von Zugriffsrechten\n\n**2. Verschlüsselung:**\n- Verschlüsselung sensibler Daten im Transit (TLS 1.2+)\n- Verschlüsselung sensibler Daten im Ruhezustand (AES-256)\n- Sichere Schlüsselverwaltung und Rotation (mindestens jährlich)\n\n**3. Monitoring & Logging:**\n- Umfassendes Audit-Logging aller sicherheitsrelevanten Ereignisse\n- Zentrale Log-Verwaltung mit Aufbewahrung von 1+ Jahr\n- Regelmäßige Überprüfung und Analyse der Logs\n- Alerts für verdächtige Aktivitäten\n\n**4. Patch-Management:**\n- Regelmäßige Aktualisierung aller IT-Systeme\n- Sicherheits-Patches zeitnah einspielen\n- Dokumentiertes Patch-Management-Verfahren\n\n**5. Sicherheitstests:**\n- Jährliche Penetrationstests durch externe Fachleute\n- Regelmäßige Schwachstellenschans\n- Dokumentation und Behebung von Findings\n\nDiese Anforderungen sind bindend und müssen in die IT-Strategie integriert sein.",
+  "sources": [
+    "BaFin BAIT - Tanzend 1-15: IT-Sicherheitsanforderungen",
+    "BaFin Merkblatt: Minimum IT-Sicherheitsstandards",
+    "BaFin MaRisk: Komplementäre Risikosteuerungsanforderungen"
+  ],
+  "source_links": [
+    "bafin_bait.pdf#tz_1_15",
+    "merkblatt_it_sicherheit.pdf",
+    "marisk.pdf#section_4.2"
+  ],
+  "session_id": "sess_demo_002"
+}

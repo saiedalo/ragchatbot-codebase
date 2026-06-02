@@ -1,0 +1,13 @@
+{
+  "query": "Welche Anforderungen gibt es für die Datensicherung und Wiederherstellung in Finanzinstituten?",
+  "answer": "Nach den deutschen Regulierungsanforderungen (BAIT, BaFin-Rundschreiben) müssen Finanzinstitute folgende Anforderungen für Datensicherung und Wiederherstellung umsetzen:\n\n**Sicherungsanforderungen:**\n- Regelmäßige Datensicherungen mindestens täglich, bei kritischen Systemen mehrmals täglich\n- Geografisch verteilte Speicherung mit Kopien an separaten Standorten\n- Verschlüsselte Speicherung aller Sicherungen (AES-256 Mindeststandard)\n- Dokumentierte Sicherungsverfahren und -zeitpläne\n\n**Wiederherstellungsanforderungen:**\n- Regelmäßige Tests der Wiederherstellung (mindestens vierteljährlich)\n- Recovery Time Objective (RTO): Kritische Systeme maximal 4-8 Stunden\n- Recovery Point Objective (RPO): Maximaler Datenverlust von 1 Stunde\n- Dokumentation aller erfolgreichen und fehlgeschlagenen Wiederherstellungstests\n\n**Governance:**\n- Verantwortliche Personen und Teams definieren\n- Notfallpläne mit regelmäßigen Überprüfungen\n- Schulungen für Mitarbeiter\n\nDiese Anforderungen sind essentiell für die Geschäftskontinuität und Datenverfügbarkeit.",
+  "sources": [
+    "BaFin BAIT - Abschnitt 4.3: Backup und Disaster Recovery",
+    "Rundschreiben 10/2017 (BA) - Kapitel 5: Geschäftskontinuitätsplanung"
+  ],
+  "source_links": [
+    "bafin_bait.pdf#section_4.3",
+    "rundschreiben_10_2017.pdf#chapter_5"
+  ],
+  "session_id": "sess_demo_001"
+}
