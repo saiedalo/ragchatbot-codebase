@@ -321,4 +321,4 @@ This project demonstrates several advanced concepts:
 
 ---
 
-**Made with ❤️ by [Your Name] | Portfolio Project at [coeln.dev](https://coeln.dev)**
+**Made with ❤️ by Saied Alouardani | Portfolio Project at [coeln.dev](https://coeln.dev)**
