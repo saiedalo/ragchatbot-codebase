@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise RAG System - Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        @media (max-width: 768px) {
+            .demo-grid { grid-template-columns: 1fr; }
+        }
+        .demo-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        .demo-card:hover {
+            transform: translateY(-5px);
+        }
+        .demo-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+        .demo-header h2 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+        .demo-header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .demo-query {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .query-label {
+            font-size: 0.8em;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .query-text {
+            font-size: 1em;
+            color: #212529;
+            font-weight: 500;
+            padding: 12px;
+            background: white;
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+        }
+        .demo-answer {
+            padding: 25px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .demo-answer h3 {
+            color: #667eea;
+            font-size: 1.1em;
+            margin: 15px 0 8px 0;
+        }
+        .demo-answer ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        .demo-answer li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        .demo-sources {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        .sources-label {
+            font-size: 0.8em;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        .source-item {
+            padding: 8px 12px;
+            background: white;
+            border-left: 3px solid #764ba2;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            color: #555;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            color: #6c757d;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Enterprise RAG System - Live Demos</h1>
+
+        <div class="demo-grid">
+            <!-- Demo 1 -->
+            <div class="demo-card">
+                <div class="demo-header">
+                    <h2>Demo 1: Datensicherung</h2>
+                    <p>Backup & Disaster Recovery</p>
+                </div>
+                <div class="demo-query">
+                    <div class="query-label">💬 Anfrage (Deutsch)</div>
+                    <div class="query-text">
+                        Welche Anforderungen gibt es für die Datensicherung und Wiederherstellung in Finanzinstituten?
+                    </div>
+                </div>
+                <div class="demo-answer">
+                    <h3>Sicherungsanforderungen</h3>
+                    <ul>
+                        <li>Tägliche Datensicherungen, bei kritischen Systemen mehrmals täglich</li>
+                        <li>Geografisch verteilte Speicherung mit Kopien an separaten Standorten</li>
+                        <li>Verschlüsselte Speicherung (AES-256)</li>
+                        <li>Dokumentierte Sicherungsverfahren</li>
+                    </ul>
+                    <h3>Wiederherstellungsanforderungen</h3>
+                    <ul>
+                        <li>Vierteljährliche Recovery-Tests</li>
+                        <li>RTO (Recovery Time Objective): 4-8 Stunden für kritische Systeme</li>
+                        <li>RPO (Recovery Point Objective): Max. 1 Stunde Datenverlust</li>
+                        <li>Dokumentation aller Tests</li>
+                    </ul>
+                </div>
+                <div class="demo-sources">
+                    <div class="sources-label">📚 Quellen</div>
+                    <div class="source-item">BaFin BAIT - Abschnitt 4.3</div>
+                    <div class="source-item">Rundschreiben 10/2017 (BA) - Kapitel 5</div>
+                </div>
+            </div>
+
+            <!-- Demo 2 -->
+            <div class="demo-card">
+                <div class="demo-header">
+                    <h2>Demo 2: IT-Sicherheit</h2>
+                    <p>BAIT Anforderungen</p>
+                </div>
+                <div class="demo-query">
+                    <div class="query-label">💬 Anfrage (Deutsch)</div>
+                    <div class="query-text">
+                        Was sind die wichtigsten IT-Sicherheitsanforderungen nach BAIT?
+                    </div>
+                </div>
+                <div class="demo-answer">
+                    <h3>Zugriffskontrolle & Authentifizierung</h3>
+                    <ul>
+                        <li>Multi-Faktor-Authentifizierung (MFA) für privilegierte Zugriffe</li>
+                        <li>Rollenbasierte Zugriffskontrolle (RBAC)</li>
+                        <li>Regelmäßige Überprüfung von Zugriffsrechten</li>
+                    </ul>
+                    <h3>Verschlüsselung & Sicherungstests</h3>
+                    <ul>
+                        <li>TLS 1.2+ im Transit, AES-256 im Ruhezustand</li>
+                        <li>Jährliche Penetrationstests</li>
+                        <li>Regelmäßige Schwachstellenscans</li>
+                    </ul>
+                </div>
+                <div class="demo-sources">
+                    <div class="sources-label">📚 Quellen</div>
+                    <div class="source-item">BaFin BAIT - Tz. 1-15</div>
+                    <div class="source-item">BaFin MaRisk - Kapitel 4.2</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <h2 style="color: white; text-align: center; margin-bottom: 30px;">Kernfunktionalitäten</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Semantische Suche</h3>
+                <p>Findet relevante Regulations-Inhalte durch Verständnis der Anfrage, nicht nur Keyword-Matching</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>Claude AI Integration</h3>
+                <p>Nutzt Claude mit Tool-Calling für intelligente Multi-Round-Suche und Synthese</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>Konversations-Memory</h3>
+                <p>Merkt sich Kontext über mehrere Fragen hinweg für natürliche Unterhaltungen</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Source Attribution</h3>
+                <p>Jede Antwort mit genauen Quellenangaben und Links zu Regulations-Dokumenten</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h3>Mehrsprachig</h3>
+                <p>Deutsche Fragen, natürliche Antworten in der Sprache des Nutzers</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Echtzeit-Antworten</h3>
+                <p>150-200ms durchschnittliche Antwortzeit, auch bei komplexen Queries</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🎯 Enterprise RAG System - Portfolio Demo | <a href="https://github.com/saiedalo/ragchatbot-codebase" style="color: white; text-decoration: underline;">View on GitHub</a></p>
+        </div>
+    </div>
+</body>
+</html>
