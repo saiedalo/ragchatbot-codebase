@@ -129,8 +129,11 @@ def _migrate_chroma_if_needed(chroma_path: str) -> None:
         return
     try:
         import chromadb
+        from chromadb.config import Settings
 
-        temp_client = chromadb.PersistentClient(path=chroma_path)
+        temp_client = chromadb.PersistentClient(
+            path=chroma_path, settings=Settings(anonymized_telemetry=False)
+        )
         existing = [c.name for c in temp_client.list_collections()]
         if "course_catalog" in existing or "course_content" in existing:
             print("Altes Datenbankschema erkannt — bereinige ChromaDB...")
