@@ -225,7 +225,7 @@ Integration with Anthropic Claude API using tool-calling.
 
 **Model Configuration:**
 ```python
-Model: claude-sonnet-4-20250514
+Model: claude-sonnet-4-6
 Temperature: 0.7 (balanced creativity/consistency)
 Max Tokens: 2000
 Tool Calling: Enabled
@@ -420,7 +420,7 @@ ToolManager
 | **FastAPI** | Web framework | Fast, async, auto-docs, type safety |
 | **Uvicorn** | ASGI server | Production-ready, high performance |
 | **ChromaDB** | Vector database | Lightweight, embedded, no setup needed |
-| **Claude Sonnet 4.5** | LLM | State-of-the-art reasoning, tool-calling |
+| **Claude Sonnet 4.6** | LLM | State-of-the-art reasoning, tool-calling |
 | **SentenceTransformers** | Embeddings | Fast, multilingual, no API calls |
 | **pdfplumber** | PDF parsing | Robust, accurate text extraction |
 | **python-docx** | DOCX parsing | Official library, reliable |
@@ -496,7 +496,7 @@ Load Balancer
 ```python
 # LLM Settings
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
-ANTHROPIC_MODEL = "claude-sonnet-4-20250514"
+ANTHROPIC_MODEL = "claude-sonnet-4-6"
 
 # Embedding Model
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"

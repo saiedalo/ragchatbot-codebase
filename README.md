@@ -18,7 +18,7 @@ Organizations spend countless hours manually searching through regulatory docume
 - Real-time decision-making about which documents to search
 - Multi-round search refinement (up to 2 iterations per query)
 - Cited responses with source attribution
-- State-of-the-art reasoning via Claude Sonnet 4.5
+- State-of-the-art reasoning via Claude Sonnet 4.6
 
 ### 💬 **Conversation Memory**
 - Session-based conversation history
@@ -64,7 +64,7 @@ For detailed architecture documentation, see [ARCHITECTURE.md](./ARCHITECTURE.md
 | **Frontend** | Vanilla JavaScript | Zero dependencies, fast, full control |
 | **Backend** | FastAPI | Async, auto-docs, high performance |
 | **Vector DB** | ChromaDB | Embedded, lightweight, production-ready |
-| **LLM** | Claude Sonnet 4.5 | Best-in-class reasoning, tool-calling |
+| **LLM** | Claude Sonnet 4.6 | Best-in-class reasoning, tool-calling |
 | **Embeddings** | SentenceTransformers | Fast, multilingual, 22MB model |
 | **Package Mgr** | uv | Fast, deterministic, modern Python tooling |
 
@@ -79,8 +79,8 @@ For detailed architecture documentation, see [ARCHITECTURE.md](./ARCHITECTURE.md
 
 1. **Clone & Install Dependencies**
 ```bash
-git clone https://github.com/yourusername/enterprise-rag-system.git
-cd enterprise-rag-system
+git clone https://github.com/saiedalo/ragchatbot-codebase.git
+cd ragchatbot-codebase
 uv sync
 ```
 
@@ -205,7 +205,7 @@ All configuration is managed via `backend/config.py`:
 
 ```python
 # LLM Settings
-ANTHROPIC_MODEL = "claude-sonnet-4-20250514"
+ANTHROPIC_MODEL = "claude-sonnet-4-6"
 
 # Document Processing
 CHUNK_SIZE = 800              # Characters per chunk
@@ -308,8 +308,8 @@ This project demonstrates several advanced concepts:
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/enterprise-rag-system/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/enterprise-rag-system/discussions)
+- **Issues**: [GitHub Issues](https://github.com/saiedalo/ragchatbot-codebase/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/saiedalo/ragchatbot-codebase/discussions)
 - **Documentation**: See files listed above
 
 ## 🙏 Acknowledgments
