@@ -57,6 +57,10 @@ ChromaDB  Claude AI  Sessions
 
 For detailed architecture documentation, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
+## 🖥️ Demo
+
+![Enterprise RAG System Demo](./docs/screenshots/app.png)
+
 ## 📊 Technology Stack
 
 | Layer | Technology | Why? |
@@ -142,7 +146,7 @@ See more examples in [`/examples`](./examples).
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Deep dive into system design, data flow, and tech decisions
 - **[API.md](./docs/API.md)** - Complete API endpoint reference
 - **[SETUP.md](./docs/SETUP.md)** - Detailed environment configuration
-- **[CLAUDE.md](./CLAUDE.md)** - Development instructions for contributors
+
 
 ## 🧪 Testing
 
@@ -194,7 +198,6 @@ enterprise-rag-system/
 │   ├── format.sh           # Code formatting
 │   └── lint.sh             # Code linting
 ├── ARCHITECTURE.md          # Architecture guide
-├── CLAUDE.md               # Development guide
 ├── .env.example            # Environment template
 └── pyproject.toml          # Python configuration
 ```

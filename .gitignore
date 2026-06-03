@@ -60,3 +60,7 @@ build/
 *.tmp
 *.temp
 debug.log
+
+# Claude Code
+CLAUDE.md
+.claude/
